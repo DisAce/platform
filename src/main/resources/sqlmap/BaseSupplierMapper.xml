@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseSupplierMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseSupplier" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="TELEPHONE" property="telephone" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="ISDELETE" property="isDelete" jdbcType="DECIMAL" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+          <![CDATA[ and ID <> #{condition.id} ]]>
+      </if>
+      <if test="condition.name != null" >
+         and NAME = #{condition.name}
+      </if>
+       <if test="condition.address != null" >
+         and ADDRESS = #{condition.address}
+      </if>
+       <if test="condition.telephone != null" >
+         and TELEPHONE = #{condition.telephone}
+      </if>
+      <if test="condition.isDelete != null" >
+         and ISDELETE = #{condition.isDelete}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, ADDRESS, TELEPHONE, REMARKS,ISDELETE, CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_Supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_Supplier
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_Supplier
+    where ID = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_Supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseSupplier" >
+   
+    insert into BASE_Supplier (ID, NAME, ADDRESS, TELEPHONE, REMARKS,ISDELETE, CREATETIME)
+    values (#{id}, #{name}, #{address}, #{telephone}, #{remarks}, #{isDelete}, #{createTime})
+  </insert>
+   <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseSupplier" >
+    
+    insert into BASE_Supplier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="telephone != null" >
+        TELEPHONE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="address != null" >
+        #{address},
+      </if>
+      <if test="telephone != null" >
+        #{telephone},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_Supplier
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+ <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_Supplier
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name},
+      </if>
+      <if test="record.address != null" >
+        ADDRESS = #{record.address},
+      </if>
+      <if test="record.telephone != null" >
+        TELEPHONE = #{record.telephone},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks},
+      </if>
+       <if test="record.isDelete != null" >
+        ISDELETE = #{record.isDelete},
+      </if>
+       <if test="record.createTime != null" >
+        CREATETIME = #{record.createTime},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_Supplier
+    set ID = #{record.id},
+      NAME = #{record.name},
+      ADDRESS = #{record.address},
+      TELEPHONE = #{record.telephone},
+      REMARKS = #{record.remarks},
+      ISDELETE = #{record.isDelete},
+      CREATETIME = #{record.createTime}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseSupplier" >
+    update BASE_Supplier
+    <set >
+      <if test="name != null" >
+        NAME = #{name},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address},
+      </if>
+      <if test="telephone != null" >
+        TELEPHONE = #{telephone},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE = #{isDelete},
+      </if>
+      <if test="createTime != null" >
+        CREATETIME = #{createTime},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseSupplier" >
+    update BASE_Supplier
+    set NAME = #{name},
+      ADDRESS = #{address},
+      TELEPHONE = #{telephone},
+      REMARKS = #{remarks},
+      ISDELETE = #{isDelete},
+      CREATETIME = #{createTime}
+    where ID = #{id}
+  </update>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseLoginLogMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseLoginLog" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="USERAGENT" property="userAgent" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+   <result column="MSG" property="msg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+         and ID = #{condition.id}
+      </if>
+      <if test="condition.username != null" >
+         and USERNAME = #{condition.username}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+       <if test="condition.nameLike != null" >
+       <![CDATA[ and username LIKE '%'||#{condition.nameLike}||'%' ]]>
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, USERNAME, PASSWORD, CREATETIME, IP, USERAGENT, STATUS ,MSG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_LoginLog
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_LoginLog
+    where ID = #{id}
+  </select>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseLoginLog" >
+   
+    insert into BASE_LoginLog (ID, USERNAME, PASSWORD, CREATETIME, IP, USERAGENT, STATUS ,MSG)
+    values (#{id}, #{username}, #{password}, #{createTime}, #{ip}, #{userAgent}, #{status},#{msg})
+  </insert>
+  
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_LoginLog
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
+</mapper>

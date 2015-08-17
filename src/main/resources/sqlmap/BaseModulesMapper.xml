@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseModulesMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseModules" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MODULE_URL" property="moduleUrl" jdbcType="VARCHAR" />
+    <result column="PARENT" property="parent" jdbcType="VARCHAR" />
+    <result column="LEAF" property="leaf" jdbcType="DECIMAL" />
+    <result column="LEVEL" property="level" jdbcType="DECIMAL" />
+    <result column="EXPANDED" property="expanded" jdbcType="DECIMAL" />
+    <result column="DISPLAY_INDEX" property="displayIndex" jdbcType="DECIMAL" />
+    <result column="IS_DISPLAY" property="isDisplay" jdbcType="DECIMAL" />
+    <result column="TYPE" property="type" jdbcType="DECIMAL" />
+    <result column="EN_MODULE_NAME" property="enModuleName" jdbcType="VARCHAR" />
+    <result column="ICON_CSS" property="iconCss" jdbcType="VARCHAR" />
+    <result column="BUTTON" property="button" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="INFORMATION" property="information" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.moduleNameLike != null" >
+       <![CDATA[ and NAME LIKE '%'||#{condition.nameLike}||'%' ]]>
+      </if>
+      <if test="condition.moduleName != null" >
+         and NAME = #{condition.name}
+      </if>
+      <if test="condition.moduleUrl != null" >
+         and MODULE_URL = #{condition.moduleUrl}
+      </if>
+      <if test="condition.parent != null" >
+         and PARENT = #{condition.parent}
+      </if>
+      <if test="condition.leaf != null" >
+         and LEAF = #{condition.leaf}
+      </if>
+      <if test="condition.level != null" >
+         and LEVEL = #{condition.level}
+      </if>
+      <if test="condition.expanded != null" >
+         and EXPANDED = #{condition.expanded}
+      </if>
+      <if test="condition.displayIndex != null" >
+         and DISPLAY_INDEX = #{condition.displayIndex}
+      </if>
+      <if test="condition.isDisplay != null" >
+         and IS_DISPLAY = #{condition.isDisplay}
+      </if>
+      <if test="condition.enModuleName != null" >
+         and EN_MODULE_NAME = #{condition.enModuleName}
+      </if>
+      <if test="condition.type != null" >
+         and TYPE = #{condition.type}
+      </if>
+      <if test="condition.button != null" >
+         and BUTTON = #{condition.button}
+      </if>
+      <if test="condition.create != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+      <if test="condition.iconCss != null" >
+         and ICON_CSS = #{condition.iconCss}
+      </if>
+      <if test="condition.information != null" >
+         and INFORMATION = #{condition.information}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, MODULE_URL, PARENT, LEAF,LEVEL, EXPANDED, DISPLAY_INDEX, IS_DISPLAY, 
+    EN_MODULE_NAME, ICON_CSS, INFORMATION,TYPE , BUTTON ,CREATETIME
+  </sql>
+  <!-- 根据用户ID查询系统菜单 -->
+  <select id="selectMyModules" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+	SELECT  
+		<if test="distinct" >
+	      distinct
+	    </if>
+		   a.id,
+	       a.name,
+	       a.module_url,
+	       a.parent,
+	       a.leaf,
+	       a.level,
+	       a.expanded,
+	       a.display_index,
+	       a.is_display,
+	       a.en_module_name,
+	       a.icon_css,
+	       a.information,
+	       a.type,
+	       a.button,
+	       a.createtime
+	  FROM base_modules     a,
+	       base_role_module b,
+	       base_roles       c,
+	       base_user_role   d,
+	       base_users       e
+	 WHERE a.id = b.module_id
+	   AND b.role_id = c.role_id
+	   AND c.role_id = d.role_id
+	   AND d.user_id = e.user_id
+	<if test="condition.parent != null" >
+      AND a.parent = #{condition.parent}
+    </if>
+  	<if test="condition.userId != null" >
+      AND e.user_id = #{condition.userId}
+    </if>
+    <if test="condition.isDisplay != null" >
+      AND a.is_display = #{condition.isDisplay}
+    </if>
+    <if test="condition.module_id_fun == null" >
+      AND b.module_id_fun is null
+    </if>
+	<if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+  
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_MODULES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <!--    
+      Oracle Use  ; mysql delete
+      
+    <include refid="common.Oracle_Pagination_Tail" />
+    
+    -->
+    
+    <include refid="common.Mysql_Pagination" />
+  </select>
+  <!-- 动态sql，最好不要带外部参数拼装进来，防止SQL注入 -->
+  <select id="selectByDynamicSql" parameterType="org.coiol.platform.core.model.Criteria"
+	resultType="java.util.HashMap">
+		<![CDATA[ ${condition.dynamicSql} ]]>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_MODULES
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from BASE_MODULES
+    where ID = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_MODULES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseModules" >
+  	
+    insert into BASE_MODULES (ID, NAME, MODULE_URL, PARENT, LEAF, LEVEL, EXPANDED, 
+      DISPLAY_INDEX, IS_DISPLAY, EN_MODULE_NAME, ICON_CSS, INFORMATION)
+    values (#{id}, #{name}, #{moduleUrl}, #{parent}, #{leaf}, #{level}, #{expanded}, 
+      #{displayIndex}, #{isDisplay}, #{enModuleName}, #{iconCss}, #{information})
+  </insert>
+  <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseModules" >
+  	
+    insert into BASE_MODULES
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="moduleUrl != null" >
+        MODULE_URL,
+      </if>
+      <if test="parent != null" >
+        PARENT,
+      </if>
+      <if test="leaf != null" >
+        LEAF,
+      </if>
+      <if test="level != null" >
+        LEVEL,
+      </if>
+      <if test="expanded != null" >
+        EXPANDED,
+      </if>
+      <if test="displayIndex != null" >
+        DISPLAY_INDEX,
+      </if>
+      <if test="isDisplay != null" >
+        IS_DISPLAY,
+      </if>
+      <if test="enModuleName != null" >
+        EN_MODULE_NAME,
+      </if>
+      <if test="iconCss != null" >
+        ICON_CSS,
+      </if>
+      <if test="information != null" >
+        INFORMATION,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="button != null" >
+        BUTTON,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{id},
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="moduleUrl != null" >
+        #{moduleUrl},
+      </if>
+      <if test="parent != null" >
+        #{parent},
+      </if>
+      <if test="leaf != null" >
+        #{leaf},
+      </if>
+      <if test="level != null" >
+        #{level},
+      </if>
+      <if test="expanded != null" >
+        #{expanded},
+      </if>
+      <if test="displayIndex != null" >
+        #{displayIndex},
+      </if>
+      <if test="isDisplay != null" >
+        #{isDisplay},
+      </if>
+      <if test="enModuleName != null" >
+        #{enModuleName},
+      </if>
+      <if test="iconCss != null" >
+        #{iconCss},
+      </if>
+      <if test="information != null" >
+        #{information},
+      </if>
+       <if test="type != null" >
+        #{type},
+      </if>
+       <if test="button != null" >
+        #{button},
+      </if>
+       <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_MODULES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_MODULES
+    <set >
+      <if test="record.moduleId != null" >
+        ID = #{record.id},
+      </if>
+      <if test="record.moduleName != null" >
+        NAME = #{record.name},
+      </if>
+      <if test="record.moduleUrl != null" >
+        MODULE_URL = #{record.moduleUrl},
+      </if>
+      <if test="record.parent != null" >
+        PARENT = #{record.parent},
+      </if>
+      <if test="record.Leaf != null" >
+        LEAF = #{record.Leaf},
+      </if>
+       <if test="record.level != null" >
+        LEVEL = #{record.level},
+      </if>
+      <if test="record.expanded != null" >
+        EXPANDED = #{record.expanded},
+      </if>
+      <if test="record.displayIndex != null" >
+        DISPLAY_INDEX = #{record.displayIndex},
+      </if>
+      <if test="record.isDisplay != null" >
+        IS_DISPLAY = #{record.isDisplay},
+      </if>
+      <if test="record.enModuleName != null" >
+        EN_MODULE_NAME = #{record.enModuleName},
+      </if>
+      <if test="record.iconCss != null" >
+        ICON_CSS = #{record.iconCss},
+      </if>
+      <if test="record.information != null" >
+        INFORMATION = #{record.information},
+      </if>
+        <if test="record.type != null" >
+        TYPE = #{record.type},
+      </if>
+        <if test="record.button != null" >
+        BUTTON = #{record.button},
+      </if>
+        <if test="record.information != null" >
+        CREATETIME = #{record.createTime},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_MODULES
+    set ID = #{record.id},
+      NAME = #{record.name},
+      MODULE_URL = #{record.moduleUrl},
+      PARENT = #{record.parent},
+      LEAF = #{record.leaf},
+      LEVEL = #{record.level},
+      EXPANDED = #{record.expanded},
+      DISPLAY_INDEX = #{record.displayIndex},
+      IS_DISPLAY = #{record.isDisplay},
+      EN_MODULE_NAME = #{record.enModuleName},
+      ICON_CSS = #{record.iconCss},
+      INFORMATION = #{record.information},
+      TYPE = #{record.type},
+      BUTTON = #{record.button},
+      CREATETIME = #{record.createTime}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseModules" >
+    update BASE_MODULES
+    <set >
+      <if test="name != null" >
+        NAME = #{name},
+      </if>
+      <if test="moduleUrl != null" >
+        MODULE_URL = #{moduleUrl},
+      </if>
+      <if test="parent != null" >
+        PARENT = #{parent},
+      </if>
+      <if test="leaf != null" >
+        LEAF = #{leaf},
+      </if>
+      <if test="level != null" >
+        LEVEL = #{level},
+      </if>
+      <if test="expanded != null" >
+        EXPANDED = #{expanded},
+      </if>
+      <if test="displayIndex != null" >
+        DISPLAY_INDEX = #{displayIndex},
+      </if>
+      <if test="isDisplay != null" >
+        IS_DISPLAY = #{isDisplay},
+      </if>
+      <if test="enModuleName != null" >
+        EN_MODULE_NAME = #{enModuleName},
+      </if>
+      <if test="iconCss != null" >
+        ICON_CSS = #{iconCss},
+      </if>
+      <if test="information != null" >
+        INFORMATION = #{information},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type},
+      </if>
+      <if test="button != null" >
+        BUTTON = #{button},
+      </if>
+      <if test="createTime != null" >
+        CREATETIME = #{createTime},
+      </if>
+    </set>
+    where MODULE_ID = #{moduleId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseModules" >
+    update BASE_MODULES
+    set NAME = #{name},
+      MODULE_URL = #{moduleUrl},
+      PARENT = #{parent},
+      LEAF = #{leaf},
+      LEVEL = #{level},
+      EXPANDED = #{expanded},
+      DISPLAY_INDEX = #{displayIndex},
+      IS_DISPLAY = #{isDisplay},
+      EN_MODULE_NAME = #{enModuleName},
+      ICON_CSS = #{iconCss},
+      INFORMATION = #{information},
+      TYPE = #{type},
+      BUTTON = #{button},
+      CREATETIME = #{createTime}
+    where ID = #{id}
+  </update>
+</mapper>

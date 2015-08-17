@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd	
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd"
+	default-lazy-init="true">
+
+	<!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
+	<context:component-scan base-package="org.coiol.platform" annotation-config="true">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- enable autowire -->
+	<context:annotation-config />
+	
+	<!-- decrypt password in config.properties -->
+	
+	<!-- Spring属性文件解密组件  -->
+	<bean id="environmentVariablesConfiguration" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES" />
+		<property name="password" value="admin" />
+	</bean>
+	<!-- 应用属性文件读入 -->
+	<bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="environmentVariablesConfiguration" />
+	</bean>
+	<bean id="propertyConfigurer"
+		class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor" />
+		<property name="locations">
+			<list>
+				<value>classpath:/config/mybatis/jdbc.properties</value>
+				<value>classpath:/config/others/config.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8" />
+	</bean> 
+	
+	<!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
+	<bean class="org.coiol.platform.common.springmvc.SpringContextHolder" lazy-init="false" />
+	
+	<!-- 数据连接事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="proxool" />
+	</bean>
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="proxool" />
+		<property name="configLocation" value="classpath:/config/mybatis/mybatis-config.xml" />
+		<property name="typeAliasesPackage" value="org.coiol.platform.core.model" />
+		<!-- <property name="mapperLocations" value="classpath:/sqlmap/*Mapper.xml" /> -->
+	</bean>
+
+	<!-- mybatis接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="org.coiol.platform.dao" />
+	</bean>
+
+	<!-- 连接事务的注解配置 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- 数据库连接池 -->
+	<import resource="classpath:/config/spring/spring-pool.xml" />
+	<import resource="classpath:/config/spring/spring-securitycode.xml" />
+
+</beans>

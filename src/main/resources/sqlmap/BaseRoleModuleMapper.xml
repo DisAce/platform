@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseRoleModuleMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseRoleModule" >
+    <id column="ROLE_MODULE_ID" property="roleModuleId" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="MODULE_ID" property="moduleId" jdbcType="VARCHAR" />
+    <result column="MODULE_ID_FUN" property="moduleIdFun" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.roleId != null" >
+         and ROLE_ID = #{condition.roleId}
+      </if>
+      <if test="condition.moduleId != null" >
+         and MODULE_ID = #{condition.moduleId}
+      </if>
+      <if test="condition.moduleIdFun != null" >
+         and MODULE_ID_FUN = #{condition.moduleIdFun}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ROLE_MODULE_ID, ROLE_ID, MODULE_ID, MODULE_ID_FUN, CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+  <!--   <include refid="common.Oracle_Pagination_Head" />  -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_ROLE_MODULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+ <!--     <include refid="common.Oracle_Pagination_Tail" /> -->
+  <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_ROLE_MODULE
+    where ROLE_MODULE_ID = #{roleModuleId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_ROLE_MODULE
+    where ROLE_MODULE_ID = #{roleModuleId}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_ROLE_MODULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseRoleModule" >
+    
+    insert into BASE_ROLE_MODULE (ROLE_MODULE_ID, ROLE_ID, MODULE_ID,MODULE_ID_FUN,CREATETIME)
+    values (#{roleModuleId}, #{roleId}, #{moduleId}, #{moduleIdFun}, #{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseRoleModule" >
+   
+    insert into BASE_ROLE_MODULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ROLE_MODULE_ID,
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="moduleId != null" >
+        MODULE_ID,
+      </if>
+      <if test="moduleIdFun != null" >
+        MODULE_ID_FUN,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{roleModuleId},
+      <if test="roleId != null" >
+        #{roleId},
+      </if>
+      <if test="moduleId != null" >
+        #{moduleId},
+      </if>
+      <if test="moduleIdFun != null" >
+        MODULE_ID_FUN,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_ROLE_MODULE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_ROLE_MODULE
+    <set >
+      <if test="record.roleModuleId != null" >
+        ROLE_MODULE_ID = #{record.roleModuleId},
+      </if>
+      <if test="record.roleId != null" >
+        ROLE_ID = #{record.roleId},
+      </if>
+      <if test="record.moduleId != null" >
+        MODULE_ID = #{record.moduleId},
+      </if>
+      <if test="moduleIdFun != null" >
+        MODULE_ID_FUN,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_ROLE_MODULE
+    set ROLE_MODULE_ID = #{record.roleModuleId},
+      ROLE_ID = #{record.roleId},
+      MODULE_ID = #{record.moduleId},
+      MODULE_ID_FUN = #{record.moduleIdFun}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseRoleModule" >
+    update BASE_ROLE_MODULE
+    <set >
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId},
+      </if>
+      <if test="moduleId != null" >
+        MODULE_ID = #{moduleId},
+      </if>
+      <if test="moduleIdFun != null" >
+        MODULE_ID_FUN = #{moduleIdFun},
+      </if>
+    </set>
+    where ROLE_MODULE_ID = #{roleModuleId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseRoleModule" >
+    update BASE_ROLE_MODULE
+    set ROLE_ID = #{roleId},
+      MODULE_ID = #{moduleId},
+      MODULE_ID_FUN = #{moduleIdFun}
+    where ROLE_MODULE_ID = #{roleModuleId}
+  </update>
+</mapper>

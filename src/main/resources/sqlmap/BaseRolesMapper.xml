@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseRolesMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseRoles" >
+    <id column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLE_DESC" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.roleNameLike != null" >
+         <![CDATA[ and ROLE_NAME LIKE '%'||#{condition.roleNameLike}||'%' ]]>
+      </if>
+      <if test="condition.roleName != null" >
+         and ROLE_NAME = #{condition.roleName}
+      </if>
+      <if test="condition.roleDesc != null" >
+         and ROLE_DESC = #{condition.roleDesc}
+      </if>
+       <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ROLE_ID, ROLE_NAME, ROLE_DESC,CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+   <!--   <include refid="common.Oracle_Pagination_Head" /> -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_ROLES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+   <!--   <include refid="common.Oracle_Pagination_Tail" /> -->
+    <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_ROLES
+    where ROLE_ID = #{roleId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_ROLES
+    where ROLE_ID = #{roleId}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_ROLES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseRoles" >
+   
+    insert into BASE_ROLES (ROLE_ID, ROLE_NAME, ROLE_DESC, CREATETIME)
+    values (#{roleId}, #{roleName}, #{roleDesc},#{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseRoles" >
+   
+    insert into BASE_ROLES
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ROLE_ID,
+      <if test="roleName != null" >
+        ROLE_NAME,
+      </if>
+      <if test="roleDesc != null" >
+        ROLE_DESC,
+      </if>
+       <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{roleId},
+      <if test="roleName != null" >
+        #{roleName},
+      </if>
+      <if test="roleDesc != null" >
+        #{roleDesc},
+      </if>
+       <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_ROLES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_ROLES
+    <set >
+      <if test="record.roleId != null" >
+        ROLE_ID = #{record.roleId},
+      </if>
+      <if test="record.roleName != null" >
+        ROLE_NAME = #{record.roleName},
+      </if>
+      <if test="record.roleDesc != null" >
+        ROLE_DESC = #{record.roleDesc},
+      </if>
+      <if test="record.createTime != null" >
+        CREATETIME = #{record.createTime},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_ROLES
+    set ROLE_ID = #{record.roleId},
+      ROLE_NAME = #{record.roleName},
+      ROLE_DESC = #{record.roleDesc}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseRoles" >
+    update BASE_ROLES
+    <set >
+      <if test="roleName != null" >
+        ROLE_NAME = #{roleName},
+      </if>
+      <if test="roleDesc != null" >
+        ROLE_DESC = #{roleDesc},
+      </if>
+    </set>
+    where ROLE_ID = #{roleId}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseRoles" >
+    update BASE_ROLES
+    set ROLE_NAME = #{roleName},
+      ROLE_DESC = #{roleDesc}
+    where ROLE_ID = #{roleId}
+  </update>
+</mapper>

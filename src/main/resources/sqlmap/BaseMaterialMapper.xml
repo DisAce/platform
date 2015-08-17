@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseMaterialMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseMaterial" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="WEIGHT" property="weight" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="PRICEID" property="priceId" jdbcType="VARCHAR" />
+    <result column="SUPPLIERID" property="supplierId" jdbcType="VARCHAR" />
+    <result column="SINGLETOTAL" property="singleTotal" jdbcType="DECIMAL" />
+    <result column="SINGLEPRICE" property="singlePrice" jdbcType="DECIMAL" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="ISDELETE" property="isDelete" jdbcType="DECIMAL" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultGroupMap" type="org.coiol.platform.core.model.BaseMaterial" extends="BaseResultMap">
+     <collection property="baseSupplierPrice" column="id" ofType="org.coiol.platform.core.model.BaseSupplierPrice" >  
+          <id column="id" property="id"/>
+		  <result column="price" property="price"/>  
+     </collection>  
+     <collection property="baseSupplier" column="id" ofType="org.coiol.platform.core.model.BaseSupplier" >  
+          <id column="id" property="id"/>
+		  <result column="name" property="name"/>  
+     </collection>  
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+        <![CDATA[  and ID <> #{condition.id} ]]>
+      </if>
+      <if test="condition.total != null" >
+        and TOTAL = #{condition.total} 
+      </if>
+       <if test="condition.num != null" >
+         and NUM = #{condition.num} 
+      </if>
+       <if test="condition.dataLike != null" >
+       <![CDATA[ and DATE_SUB(CURDATE(), INTERVAL #{condition.dataLike} DAY) <= DATE(date) ]]>
+      </if>
+      <if test="condition.priceId != null" >
+         and PRICEID = #{condition.priceId} 
+      </if>
+       <if test="condition.supplierId != null" >
+         and SUPPLIERID = #{condition.supplierId} 
+      </if>
+      <if test="condition.isDelete != null" >
+         and ISDELETE = #{condition.isDelete}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TOTAL, WEIGHT, NUM, PRICEID, SUPPLIERID, SINGLETOTAL, SINGLEPRICE, REMARKS, ISDELETE, DATE, CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultGroupMap" parameterType="org.coiol.platform.core.model.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    m.id,
+    m.total,
+    m.weight,
+    m.date,
+    m.supplierId,
+    m.num,
+    m.priceId,
+    s.name,
+    m.singleTotal,
+	m.singlePrice,
+    p.price,
+    m.remarks,
+    m.isDelete,
+    m.createTime
+    from BASE_Material m,
+    	 BASE_Supplier_Price p,
+    	 BASE_Supplier s
+   WHERE m.priceId = p.id
+  	 	 and s.id = m.supplierId
+  	 	 and s.id = p.supplierId
+   	  <if test="condition.id != null" >
+          and m.id = #{condition.id}
+      </if>
+      <if test="condition.total != null" >
+        and m.Total = #{condition.total} 
+      </if>
+      <if test="condition.isDelete != null" >
+         and m.isDelete = #{condition.isDelete}
+      </if>
+      <if test="condition.createTime != null" >
+         and m.createTime = #{condition.createTime}
+      </if>
+      <if test="condition.date != null" >
+         and m.date = #{condition.date}
+      </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  <include refid="common.Mysql_Pagination" />
+  </select>
+  
+    <select id="chartByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from BASE_Material
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+   
+     <include refid="common.Mysql_Pagination" />
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_Material
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_Material
+    where ID = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_Material
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseMaterial" >
+   
+    insert into BASE_Material (ID, TOTAL, WEIGHT, NUM, PRICEID, SUPPLIERID, SINGLETOTAL, SINGLEPRICE, REMARKS, ISDELETE, DATE, CREATETIME)
+    values (#{id}, #{total}, #{weight}, #{num}, #{priceId}, #{supplierId}, #{singleTotal}, #{singlePrice},  #{remarks}, #{isDelete}, #{date}, #{createTime})
+  </insert>
+   <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseMaterial" >
+    
+    insert into BASE_Material
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,
+      <if test="total != null" >
+        TOTAL,
+      </if>
+      <if test="weight != null" >
+        WEIGHT,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+       <if test="priceId != null" >
+        PRICEID,
+      </if>
+       <if test="supplierId != null" >
+        SUPPLIERID,
+      </if>
+      <if test="singleTotal != null" >
+        SINGLETOTAL,
+      </if>
+       <if test="singlePrice != null" >
+        SINGLEPRICE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE,
+      </if>
+       <if test="date != null" >
+        DATE,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="total != null" >
+        #{total},
+      </if>
+      <if test="weight != null" >
+        #{weight},
+      </if>
+      <if test="num != null" >
+        #{num},
+      </if>
+       <if test="priceId != null" >
+        #{priceId},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId},
+      </if>
+      <if test="singleTotal != null" >
+        #{singleTotal},
+      </if>
+      <if test="singlePrice != null" >
+        #{singlePrice},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete},
+      </if>
+       <if test="date != null" >
+        #{date},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_Material
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+ 
+ <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_Material
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id},
+      </if>
+      <if test="record.total != null" >
+        TOTAL = #{record.total},
+      </if>
+      <if test="record.weight != null" >
+        WEIGHT = #{record.weight},
+      </if>
+      <if test="record.num != null" >
+        NUM = #{record.num},
+      </if>
+       <if test="record.priceId != null" >
+        PRICEID = #{record.priceId},
+      </if>
+       <if test="record.supplierId != null" >
+        SUPPLIERID = #{record.supplierId},
+      </if>
+      <if test="record.singleTotal != null" >
+        SINGLETOTAL = #{record.singleTotal},
+      </if>
+       <if test="record.singlePrice != null" >
+        SINGLEPRICE = #{record.singlePrice},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks},
+      </if>
+       <if test="record.isDelete != null" >
+        ISDELETE = #{record.isDelete},
+      </if>
+        <if test="record.date != null" >
+        DATE = #{record.date},
+      </if>
+       <if test="record.createTime != null" >
+        CREATETIME = #{record.createTime},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_Material
+    set ID = #{record.id},
+      TOTAL = #{record.total},
+      WEIGHT = #{record.weight},
+      NUM = #{record.num},
+      PRICEID = #{record.priceId},
+      SUPPLIERID = #{record.supplierId},
+      SINGLETOTAL = #{record.singleTotal},
+      SINGLEPRICE = #{record.singlePrice},
+      REMARKS = #{record.remarks},
+      ISDELETE = #{record.isDelete},
+      DATE = #{record.date},
+      CREATETIME = #{record.createTime}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseMaterial" >
+    update BASE_Material
+    <set >
+      <if test="total != null" >
+        TOTAL = #{total},
+      </if>
+       <if test="weight != null" >
+        WEIGHT = #{weight},
+      </if>
+      <if test="num != null" >
+        NUM = #{num},
+      </if>
+      <if test="priceId != null" >
+        PRICEID = #{priceId},
+      </if>
+       <if test="supplierId != null" >
+        SUPPLIERID = #{supplierId},
+      </if>
+      <if test="singleTotal != null" >
+        SINGLETOTAL = #{singleTotal},
+      </if>
+      <if test="singlePrice != null" >
+        SINGLEPRICE = #{singlePrice},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE = #{isDelete},
+      </if>
+       <if test="date != null" >
+        DATE = #{date},
+      </if>
+      <if test="createTime != null" >
+        CREATETIME = #{createTime},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  
+    <update id="deleteByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseMaterial" >
+    update BASE_Material
+    <set >
+      <if test="isDelete != null" >
+        ISDELETE = #{isDelete},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseMaterial" >
+    update BASE_Material
+    set TOTAL = #{total},
+      WEIGHT = #{weight},
+      NUM = #{num},
+      PRICEID = #{priceId},
+      SUPPLIERID = #{supplierId},
+      SINGLETOTAL = #{singleTotal},
+      SINGLEPRICE = #{singlePrice},
+      REMARKS = #{remarks},
+      ISDELETE = #{isDelete},
+      DATE = #{date},
+      CREATETIME = #{createTime}
+    where ID = #{id}
+  </update>
+</mapper>

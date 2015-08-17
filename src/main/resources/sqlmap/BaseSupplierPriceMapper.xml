@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.BaseSupplierPriceMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.BaseSupplierPrice" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SUPPLIERID" property="supplierId" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="ISDELETE" property="isDelete" jdbcType="DECIMAL" />
+    <result column="CREATETIME" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultGroupMap" type="org.coiol.platform.core.model.BaseSupplierPrice" extends="BaseResultMap">
+     <collection property="baseSupplier" column="id" ofType="org.coiol.platform.core.model.BaseSupplier" >  
+          <id column="id" property="id"/>
+		  <result column="name" property="name"/>  
+     </collection>  
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.id != null" >
+        <![CDATA[  and ID <> #{condition.id} ]]>
+      </if>
+      <if test="condition.supplierId != null" >
+        and SUPPLIERID = #{condition.supplierId} 
+      </if>
+       <if test="condition.price != null" >
+         and PRICE = #{condition.price} 
+      </if>
+      <if test="condition.isDelete != null" >
+         and ISDELETE = #{condition.isDelete}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SUPPLIERID, PRICE, REMARKS, ISDELETE, CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultGroupMap" parameterType="org.coiol.platform.core.model.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    p.id,
+    p.supplierId,
+    s.name,
+    p.price,
+    p.remarks,
+    p.isDelete,
+    p.createTime
+    from BASE_Supplier_Price p,
+    	 BASE_Supplier s
+   WHERE p.supplierId = s.id
+   	  <if test="condition.id != null" >
+          and p.id = #{condition.id}
+      </if>
+      <if test="condition.supplierId != null" >
+        and p.supplierId = #{condition.supplierId} 
+      </if>
+       <if test="condition.price != null" >
+        and PRICE = #{condition.price} 
+      </if>
+      <if test="condition.isDelete != null" >
+         and p.isDelete = #{condition.isDelete}
+      </if>
+      <if test="condition.createTime != null" >
+         and p.createTime = #{condition.createTime}
+      </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_Supplier_Price
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_Supplier_Price
+    where ID = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from BASE_Supplier_Price
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.BaseSupplierPrice" >
+   
+    insert into BASE_Supplier_Price (ID, SUPPLIERID, PRICE, REMARKS, ISDELETE, CREATETIME)
+    values (#{id}, #{supplierId}, #{price}, #{remarks}, #{isDelete}, #{createTime})
+  </insert>
+   <insert id="insertSelective" parameterType="org.coiol.platform.core.model.BaseSupplierPrice" >
+    
+    insert into BASE_Supplier_Price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,
+      <if test="supplierId != null" >
+        SUPPLIERID,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE,
+      </if>
+      <if test="createTime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="supplierId != null" >
+        #{supplierId},
+      </if>
+      <if test="price != null" >
+        #{price},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from BASE_Supplier_Price
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+ 
+ <update id="updateByExampleSelective" parameterType="map" >
+    update BASE_Supplier_Price
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id},
+      </if>
+      <if test="record.supplierId != null" >
+        SUPPLIERID = #{record.supplierId},
+      </if>
+      <if test="record.price != null" >
+        PRICE = #{record.price},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks},
+      </if>
+       <if test="record.isDelete != null" >
+        ISDELETE = #{record.isDelete},
+      </if>
+       <if test="record.createTime != null" >
+        CREATETIME = #{record.createTime},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update BASE_Supplier_Price
+    set ID = #{record.id},
+      SUPPLIERID = #{record.supplierId},
+      PRICE = #{record.price},
+      REMARKS = #{record.remarks},
+      ISDELETE = #{record.isDelete},
+      CREATETIME = #{record.createTime}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseSupplierPrice" >
+    update BASE_Supplier_Price
+    <set >
+      <if test="supplierId != null" >
+        SUPPLIERID = #{supplierId},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks},
+      </if>
+      <if test="isDelete != null" >
+        ISDELETE = #{isDelete},
+      </if>
+      <if test="createTime != null" >
+        CREATETIME = #{createTime},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+   <update id="deleteByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.BaseSupplierPrice" >
+    update BASE_Supplier_Price
+    <set >
+      <if test="isDelete != null" >
+        ISDELETE = #{isDelete},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.BaseSupplierPrice" >
+    update BASE_Supplier_Price
+    set SUPPLIERID = #{supplierId},
+      PRICE = #{price},
+      REMARKS = #{remarks},
+      ISDELETE = #{isDelete},
+      CREATETIME = #{createTime}
+    where ID = #{id}
+  </update>
+</mapper>
