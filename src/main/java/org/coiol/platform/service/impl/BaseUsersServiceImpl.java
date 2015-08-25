@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -17,30 +18,32 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseUserRole;
 import org.coiol.platform.core.model.BaseUsers;
 import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.dao.BaseUserRoleMapper;
 import org.coiol.platform.dao.BaseUsersMapper;
 import org.coiol.platform.service.BaseUsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Component
 public class BaseUsersServiceImpl implements BaseUsersService
 {
 
+  private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseUsersServiceImpl.class);
   @Autowired
   private BaseUsersMapper baseUsersMapper;
 
@@ -67,7 +70,7 @@ public class BaseUsersServiceImpl implements BaseUsersService
 
   @Value("${limit.millis.text:一小时}")
   private String millisText;
-  private static final Logger logger = LoggerFactory.getLogger(BaseUsersServiceImpl.class);
+  
   public static MethodUtil util = new MethodUtil();
   
   public String selectByBaseUser(Criteria criteria)

@@ -22,12 +22,11 @@ import org.coiol.platform.dao.BaseFieldsMapper;
 import org.coiol.platform.service.BaseFieldsService;
 @Service
 @Component
-public class BaseFieldsServiceImpl
-	implements BaseFieldsService
+public class BaseFieldsServiceImpl implements BaseFieldsService
 {
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseFieldsServiceImpl.class);
 	@Autowired
 	private BaseFieldsMapper baseFieldsMapper;
-	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseFieldsServiceImpl.class);
 
 	public int countByExample(Criteria example)
 	{

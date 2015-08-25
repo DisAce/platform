@@ -1,24 +1,25 @@
 package org.coiol.platform.service.impl;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
+import org.coiol.platform.core.model.BaseLoginLog;
+import org.coiol.platform.core.model.Criteria;
+import org.coiol.platform.dao.BaseLoginLogMapper;
+import org.coiol.platform.service.BaseLoginLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.coiol.platform.core.model.BaseLoginLog;
-import org.coiol.platform.core.model.Criteria;
-import org.coiol.platform.dao.BaseLoginLogMapper;
-import org.coiol.platform.service.BaseLoginLogService;
 @Service
 @Component
 public class BaseLoginLogServiceImpl implements BaseLoginLogService {
 	@Autowired
 	private BaseLoginLogMapper baseLoginLogMapper;
 	
-	private static final Logger logger = LoggerFactory.getLogger(BaseLoginLogMapper.class);
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseLoginLogMapper.class);
 	
 	public BaseLoginLogServiceImpl(){
 		

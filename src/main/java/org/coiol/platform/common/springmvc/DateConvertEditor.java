@@ -1,5 +1,4 @@
 
-
 package org.coiol.platform.common.springmvc;
 
 import java.beans.PropertyEditorSupport;

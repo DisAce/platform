@@ -11,20 +11,21 @@
 package org.coiol.platform.service.impl;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseSupplier;
 import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.dao.BaseSupplierMapper;
 import org.coiol.platform.dao.BaseSupplierPriceMapper;
 import org.coiol.platform.service.BaseSupplierService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /** 
  * @ClassName BaseSupplierServiceImpl  
@@ -36,14 +37,13 @@ import org.coiol.platform.service.BaseSupplierService;
 @Service
 @Component
 public class BaseSupplierServiceImpl implements BaseSupplierService {
-	  
+	
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseSupplierServiceImpl.class);  
 	@Autowired
 	private BaseSupplierMapper supplierMapper;
 	@Autowired
 	private BaseSupplierPriceMapper supplierMapperPrice;
 	
-	
-	private static final Logger logger = LoggerFactory.getLogger(BaseSupplierServiceImpl.class);
 	public static MethodUtil util = new MethodUtil();
 	/* (non-Javadoc)
 	 * <p>Title: countByExample</p> 

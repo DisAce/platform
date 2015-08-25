@@ -1,4 +1,4 @@
-// Source File Name:   PropertiesHelper.java
+
 
 package org.coiol.platform.common.utils;
 

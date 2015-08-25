@@ -13,21 +13,22 @@ package org.coiol.platform.service.impl;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseMaterial;
 import org.coiol.platform.core.model.BaseSupplierPrice;
 import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.dao.BaseMaterialMapper;
 import org.coiol.platform.service.BaseMaterialService;
 import org.coiol.platform.service.BaseSupplierPriceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /** 
  * @ClassName BaseMaterialServiceImpl  
@@ -40,13 +41,12 @@ import org.coiol.platform.service.BaseSupplierPriceService;
 @Component
 public class BaseMaterialServiceImpl implements BaseMaterialService {
 	
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseMaterialServiceImpl.class);
 	@Autowired
 	private BaseMaterialMapper materialMapper;
 	@Autowired
 	private BaseSupplierPriceService supplierPriceService;
 	
-	
-	private static final Logger logger = LoggerFactory.getLogger(BaseMaterialServiceImpl.class);
 	public static MethodUtil util = new MethodUtil();
 
 	/* (non-Javadoc)

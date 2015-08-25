@@ -5,38 +5,36 @@ package org.coiol.platform.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseRoleModule;
 import org.coiol.platform.core.model.BaseRoles;
 import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.dao.BaseRoleModuleMapper;
 import org.coiol.platform.dao.BaseRolesMapper;
 import org.coiol.platform.dao.BaseUserRoleMapper;
-import org.coiol.platform.service.BaseModulesService;
 import org.coiol.platform.service.BaseRolesService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 @Service
 @Component
 public class BaseRolesServiceImpl implements BaseRolesService
 {
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseRolesServiceImpl.class);
 	@Autowired
 	private BaseRolesMapper baseRolesMapper;
 	@Autowired
 	private BaseUserRoleMapper baseUserRoleMapper;
 	@Autowired
 	private BaseRoleModuleMapper baseRoleModuleMapper;
-	@Autowired //自动注入，不需要生成set方法了，required=false表示没有实现类，也不会报错。
-	private BaseModulesService baseModulesService;
 	
 	public static MethodUtil util = new MethodUtil();
-	private static final Logger logger = LoggerFactory.getLogger(BaseRolesServiceImpl.class);
 
 	public BaseRolesServiceImpl()
 	{

@@ -6,16 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseModules;
 import org.coiol.platform.core.model.BaseRoleModule;
 import org.coiol.platform.core.model.BaseUsers;
@@ -25,11 +20,18 @@ import org.coiol.platform.core.model.TreeMenu;
 import org.coiol.platform.dao.BaseModulesMapper;
 import org.coiol.platform.dao.BaseRoleModuleMapper;
 import org.coiol.platform.service.BaseModulesService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Component
 public class BaseModulesServiceImpl implements BaseModulesService
 {
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseModulesServiceImpl.class);
 	@Autowired
 	private BaseModulesMapper baseModulesMapper;
 	@Autowired
@@ -40,7 +42,6 @@ public class BaseModulesServiceImpl implements BaseModulesService
 	private boolean isDisplay;
 	
 	public static MethodUtil util = new MethodUtil();
-	private static final Logger logger = LoggerFactory.getLogger(BaseModulesServiceImpl.class);
 
 	public BaseModulesServiceImpl()
 	{

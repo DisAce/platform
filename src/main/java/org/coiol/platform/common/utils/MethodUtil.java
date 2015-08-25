@@ -17,18 +17,15 @@ import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MethodUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MethodUtil.class);	
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(MethodUtil.class);	
 	/**
 	 * 获取登录用户的IP地址
 	 * 

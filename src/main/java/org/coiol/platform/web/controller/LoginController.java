@@ -49,15 +49,8 @@ public class LoginController
 	private BaseUsersService baseUsersService;
 	@Autowired
 	private BaseModulesService baseModulesService;
-	@Autowired
-	private BaseLoginLogService baseLoginLogService;
 	@Value("${limit.millis:3600000}")
 	private Long millis;
-	@Autowired
-	private MessageSource messageSource;
-
-	
-	
 	public LoginController()
 	{
 	}

@@ -11,9 +11,10 @@
 	default-lazy-init="true">
 
 	<!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
-	<context:component-scan base-package="org.coiol.platform" annotation-config="true">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	<context:component-scan base-package="org.coiol.platform" use-default-filters="true">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
+	
 	<!-- enable autowire -->
 	<context:annotation-config />
 	
@@ -34,7 +35,6 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/config/mybatis/jdbc.properties</value>
-				<value>classpath:/config/others/config.properties</value>
 			</list>
 		</property>
 		<property name="fileEncoding" value="utf-8" />

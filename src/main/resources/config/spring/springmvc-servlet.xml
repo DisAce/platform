@@ -12,12 +12,11 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd"
 	default-lazy-init="true">
-
-		<!-- 只搜索@Controller 标注的类 不搜索其他标注的类 -->
-	<context:component-scan base-package="com.coiol.platform" use-default-filters="false">
+	
+	<!-- 自动搜索@Controller的类 -->
+	<context:component-scan base-package="org.coiol.platform.web" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-	
 	<!-- 加入Aspectj配置 -->
 	<aop:aspectj-autoproxy  proxy-target-class="true"/>
 	<!-- controller层的属性和配置文件读入 ,多个用逗号隔开 <context:property-placeholder location="classpath:/config/others/config.properties" /> -->
@@ -29,13 +28,13 @@
 			<list>
 				<!-- 标准配置 -->
 				<value>classpath:/config/others/config.properties</value>
-				<value>classpath:/config/mybatis/jdbc.properties</value>
 			</list>
 		</property>
+		<property name="fileEncoding" value="utf-8" />
 	</bean>
 
 	<!-- 用于持有applicationProperties,将properties转变为静态方法使用,PropertiesHolder.getProperty("somekey") -->
-	<bean class="com.coiol.platform.common.utils.PropertiesHolder">
+	<bean class="org.coiol.platform.common.utils.PropertiesHolder">
 		<property name="properties" ref="applicationProperties" />
 	</bean>
 

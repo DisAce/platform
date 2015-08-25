@@ -11,29 +11,28 @@
 package org.coiol.platform.service.impl;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
+import org.coiol.platform.core.model.BaseShipment;
+import org.coiol.platform.core.model.Criteria;
+import org.coiol.platform.dao.BaseShipmentMapper;
+import org.coiol.platform.service.BaseShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.coiol.platform.common.utils.MethodUtil;
-import org.coiol.platform.core.model.BaseShipment;
-import org.coiol.platform.core.model.Criteria;
-import org.coiol.platform.dao.BaseShipmentMapper;
-import org.coiol.platform.service.BaseShipmentService;
 
 @Service
 @Component
 public class BaseShipmentServiceImpl implements BaseShipmentService
 {
-	
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(BaseShipmentServiceImpl.class);
 	@Autowired
 	private BaseShipmentMapper shipmentMapper;
-	
-	private static final Logger logger = LoggerFactory.getLogger(BaseShipmentServiceImpl.class);
 	
 	public static MethodUtil util = new MethodUtil();
 	

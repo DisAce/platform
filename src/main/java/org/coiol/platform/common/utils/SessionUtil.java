@@ -4,12 +4,12 @@ package org.coiol.platform.common.utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 
 
 public final class SessionUtil {
-	protected static final Logger logger = LoggerFactory.getLogger(SessionUtil.class);
+	protected static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(SessionUtil.class);
 	private static final String USER = "user";    //用户
 	private static String _user = "Anonymous";
 	private static String userAgent;  //客户端

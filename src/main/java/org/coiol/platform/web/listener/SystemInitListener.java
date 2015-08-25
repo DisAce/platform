@@ -7,8 +7,12 @@ import org.coiol.platform.common.springmvc.SpringContextHolder;
 import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.service.BaseFieldsService;
 
-public class SystemInitListener
-	implements ServletContextListener
+/**
+ * 初始化系统配置
+ * @author eingxin
+ *
+ */
+public class SystemInitListener implements ServletContextListener
 {
 
 	public SystemInitListener()

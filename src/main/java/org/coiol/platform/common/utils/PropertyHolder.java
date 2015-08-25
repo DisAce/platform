@@ -75,9 +75,6 @@ public class PropertyHolder
 	     */
 	    private static void init() {
 	            String systemConfig="/config/others/config.properties";
-	            String localConfig="/config.local.properties";
-	            String dbConfig="/org/apdplat/db.properties";
-	            String localDBConfig="/db.local.properties";
 	            ClassPathResource cr = null;
 	            try{
 	                cr = new ClassPathResource(systemConfig);
@@ -86,28 +83,6 @@ public class PropertyHolder
 	            }catch(Exception e){
 	                LOG.info("装入主配置文件"+systemConfig+"失败!", e);
 	            }
-	            try{
-	                cr = new ClassPathResource(localConfig);
-	                load(cr.getInputStream(), PROPERTIES);
-	                LOG.info("装入自定义主配置文件："+localConfig);
-	            }catch(Exception e){
-	                LOG.info("装入自定义主配置文件"+localConfig+"失败！", e);
-	            }            
-	            try{
-	                cr = new ClassPathResource(dbConfig);
-	                load(cr.getInputStream(), PROPERTIES);
-	                LOG.info("装入数据库配置文件："+dbConfig);
-	                LOG.info("Database profile is loaded："+dbConfig);
-	            }catch(Exception e){
-	                LOG.info("装入数据库配置文件"+dbConfig+"失败！", e);
-	            }      
-	            try{  
-	                cr = new ClassPathResource(localDBConfig);
-	                load(cr.getInputStream(), PROPERTIES);
-	                LOG.info("装入自定义数据库配置文件："+localDBConfig);
-	            }catch(Exception e){
-	                LOG.info("装入自定义数据库配置文件"+localDBConfig+"失败！",e);
-	            }      
 	            
 	            String extendPropertyFiles = PROPERTIES.get("extend.property.files");
 	            if(extendPropertyFiles!=null && !"".equals(extendPropertyFiles.trim())){

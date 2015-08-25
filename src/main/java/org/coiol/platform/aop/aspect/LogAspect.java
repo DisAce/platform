@@ -36,7 +36,7 @@ public class LogAspect {
 	/**
 	 * 登录业务逻辑方法切入点
 	 */
-    @Pointcut("execution(* com.coiol.platform.web.controller.LoginController.login(..))")
+    @Pointcut("execution(* org.coiol.platform.web.controller.LoginController.login(..))")
     public void loginServiceCall() { }
 	
 	/**

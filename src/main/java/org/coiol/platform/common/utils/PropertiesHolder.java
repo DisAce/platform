@@ -1,4 +1,3 @@
-// Source File Name:   PropertiesHolder.java
 
 package org.coiol.platform.common.utils;
 
@@ -9,8 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-// Referenced classes of package com.chenxin.authority.common.utils:
-//			PropertiesHelper
 
 public class PropertiesHolder
 	implements InitializingBean
