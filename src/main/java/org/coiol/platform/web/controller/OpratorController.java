@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.jackjson.JackJson;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
@@ -124,7 +125,7 @@ public class OpratorController {
 	public Object selectModulesByRoleId(@PathVariable String roleId) {
 		try {
 			if (StringUtils.isBlank(roleId)) {
-				return new ExtReturn(false, "角色ID不能为空！");
+				return new ExtReturn(false, ResultCode.ROLE_ID_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("roleId", roleId);

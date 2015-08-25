@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
 import org.coiol.platform.common.utils.MethodUtil;
 import org.coiol.platform.common.utils.SessionUtil;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.jackjson.JackJson;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
@@ -24,13 +25,11 @@ import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.core.model.ExceptionReturn;
 import org.coiol.platform.core.model.ExtReturn;
 import org.coiol.platform.core.model.Tree;
-import org.coiol.platform.service.BaseLoginLogService;
 import org.coiol.platform.service.BaseModulesService;
 import org.coiol.platform.service.BaseUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -103,35 +102,35 @@ public class LoginController
 	{
 		try {
 			String msg;
+			// 帐号不能为空！
 			if (StringUtils.isBlank(username)) {
-				msg = "帐号不能为空！";
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.USERNAME_IS_NULL);
 			}
+			// 密码不能为空
 			if (StringUtils.isBlank(password)) {
-				msg = "密码不能为空！";
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.USER_PASSWORD_IS_NULL);
 			}
-			String verifyCode = request.getParameter("verifyCode"); // 获取递交的验证码
+			// 获取递交的验证码
+			String verifyCode = request.getParameter("verifyCode");
+			
+			// 验证码不能为空
 			if (StringUtils.isBlank(verifyCode)) {
-				msg = "验证码不能为空！";
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_NULL);
 			}
 			SessionUtil.set_user(username);
 			SessionUtil.setUserAgent(request.getParameter("userAgent"));
 			SessionUtil.setIp(MethodUtil.getIpAddr(request));
 			String sessionCaptcha = (String) SessionUtil.getAttr(request, "KAPTCHA_SESSION_KEY");// session验证码
 			
+			// 验证码已经失效!请重新输入新的验证码
 			if (null == sessionCaptcha) {
-				msg = "验证码已经失效!请重新输入新的验证码！";
-				SessionUtil.setMsg(msg);
 				SessionUtil.setStatus(1);
-				return new ExtReturn(false, msg,"1");
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_INVAL);
 			}
+			// 验证码输入不正确,请重新输入
 			if (!verifyCode.equalsIgnoreCase((String) sessionCaptcha)) {
-				msg = "验证码输入不正确,请重新输入！";
-				SessionUtil.setMsg(msg);
 				SessionUtil.setStatus(1);
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_FAILD);
 			}
 			SessionUtil.removeAttr(request, "KAPTCHA_SESSION_KEY");
 			Criteria criteria = new Criteria();
@@ -144,23 +143,20 @@ public class LoginController
 				Integer isAdmin = baseUser.getIsAdmin() == null ? 1 : baseUser.getIsAdmin();
 				SessionUtil.setAttr(request, "isAdmin", "" + isAdmin);
 				SessionUtil.setAttr(request, "CURRENT_USER",baseUser);
-				msg = "登陆成功";
-				SessionUtil.setMsg(msg);
 				SessionUtil.setStatus(0);
 				List<String> authUrls = new ArrayList<String>();
 				authUrls.add("/main");
 				SessionUtil.setAttr(request, "userName",baseUser.getRealName());
 				SessionUtil.setAttr(request, "authUrls", authUrls);
 				logger.info("{}登陆成功", baseUser.getRealName());
-				return new ExtReturn(true, "success");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			}
+			// 用户名或者密码错误
 			if ("00".equals(result)) {
-				msg = "用户名或者密码错误!";
-				SessionUtil.setMsg(msg);
 				SessionUtil.setStatus(1);
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.USER_OR_PASSWORD_IS_FAILD);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -183,35 +179,34 @@ public class LoginController
 			String verifyCode = request.getParameter("verifyCode"); // 获取递交的验证码
 			if (null != user) {
 				if (StringUtils.isBlank(user.getAccount())) {
-					return new ExtReturn(false, "帐号不能为空！");
+					return new ExtReturn(false, ResultCode.USERNAME_IS_NULL);
 				}
 			}else{
-				return new ExtReturn(false, "用户不能为空！");
+				return new ExtReturn(false, ResultCode.USER_IS_NULL);
 			}
 			if (StringUtils.isBlank(user.getEmail())) {
-				return new ExtReturn(false, "注册邮箱不能为空！");
+				return new ExtReturn(false, ResultCode.REGISTER_USER_EMAIL_IS_NULL);
 			}
 			if (StringUtils.isBlank(verifyCode)) {
-				msg = "验证码不能为空！";
-				return new ExtReturn(false, msg);
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_NULL);
 			}
 			String sessionCaptcha = (String) SessionUtil.getAttr(request, "KAPTCHA_SESSION_KEY");// session验证码
 			if (null == sessionCaptcha) {
-				return new ExtReturn(false, "验证码已经失效!请重新输入新的验证码！","1");
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_INVAL);
 			}
 			if (!verifyCode.equalsIgnoreCase((String) sessionCaptcha)) {
-				return new ExtReturn(false, "验证码输入不正确,请重新输入！");
+				return new ExtReturn(false, ResultCode.VERIFY_CODE_IS_FAILD);
 			}
 			SessionUtil.removeAttr(request, "KAPTCHA_SESSION_KEY");
 			Criteria criteria = new Criteria();
 			criteria.put("user", user);
 			String result = this.baseUsersService.findPassword(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "邮件发送成功！请登录注册邮箱查收！");
+				return new ExtReturn(true, ResultCode.SEND_EMAIL_SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "邮件发送失败！");
+				return new ExtReturn(false, ResultCode.SEND_EMAIL_FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

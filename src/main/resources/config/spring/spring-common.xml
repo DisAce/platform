@@ -18,8 +18,7 @@
 	<!-- enable autowire -->
 	<context:annotation-config />
 	
-	<!-- decrypt password in config.properties -->
-	
+	<!-- decrypt password in jdbc.properties -->
 	<!-- Spring属性文件解密组件  -->
 	<bean id="environmentVariablesConfiguration" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
 		<property name="algorithm" value="PBEWithMD5AndDES" />

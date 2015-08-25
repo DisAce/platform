@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseModules;
@@ -126,29 +127,29 @@ public class RoleController
 	public Object save(BaseRoles role,@RequestParam String moduleIds) {
 		try {
 			if (role == null) {
-				return new ExtReturn(false, "角色不能为空!");
+				return new ExtReturn(false, ResultCode.ROLE_ID_IS_NULL);
 			}
 			if (StringUtils.isBlank(role.getRoleName())) {
-				return new ExtReturn(false, "角色名称不能为空!");
+				return new ExtReturn(false, ResultCode.ROLE_NAME_IS_NULL);
 			}
 			
 			if (StringUtils.isBlank(moduleIds)) {
-				return new ExtReturn(false, "选择的资源不能为空！");
+				return new ExtReturn(false, ResultCode.CHOOSE_RESOURCES_IS_NULL);
 			}
 			String[] modules = StringUtils.split(moduleIds, ",");
 			if ((null == modules) || (modules.length == 0)) {
-				return new ExtReturn(false, "选择的资源不能为空！");
+				return new ExtReturn(false, ResultCode.CHOOSE_RESOURCES_IS_NULL);
 			}
 			String result = this.baseRolesService.saveRole(role, moduleIds);
 			if ("01".equals(result)){
 				
-				return new ExtReturn(true, "保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			}
 			
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -160,17 +161,17 @@ public class RoleController
 	public Object delete( String ids) {
 		try {
 			if (StringUtils.isBlank(ids)) {
-				return new ExtReturn(false, "角色主键不能为空！");
+				return new ExtReturn(false, ResultCode.MODULE_KEY_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("roleId", ids);
 			String result = this.baseRolesService.deleteByPrimaryKey(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "删除成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "删除失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

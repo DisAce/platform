@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseMaterial;
@@ -190,15 +191,15 @@ public class MaterialController {
 		try {
 			String total = material.getTotal()+"";
 			if (StringUtils.isBlank(total)) {
-				return new ExtReturn(false, "订单总金额不能为空！");
+				return new ExtReturn(false, ResultCode.ORDER_AMOUNT_IS_NULL);
 			}
 			
 			if (StringUtils.isBlank(material.getPriceId())) {
-				return new ExtReturn(false, "供应商单价不能为空！");
+				return new ExtReturn(false, ResultCode.SUPPLIERS_PRICE_IS_NULL);
 			}
 			String num = material.getNum()+"";
 			if (StringUtils.isBlank(num)) {
-				return new ExtReturn(false, "订单总只数不能为空！");
+				return new ExtReturn(false, ResultCode.ORDER_TOTAL_NUM_IS_NULL);
 			}
 			
 			Criteria criteria = new Criteria();
@@ -206,11 +207,11 @@ public class MaterialController {
 			
 			String result = this.materialService.saveMaterial(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "进货单信息保存成功！");
+				return new ExtReturn(true, ResultCode.JHDS_INFO_SAVE_SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "进货单信息保存失败！");
+				return new ExtReturn(false, ResultCode.JHDS_INFO_SAVE_FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -222,17 +223,17 @@ public class MaterialController {
 	public Object delete(@PathVariable String id) {
 		try {
 			if (StringUtils.isBlank(id)) {
-				return new ExtReturn(false, "请选择要删除的记录！");
+				return new ExtReturn(false, ResultCode.PLEASE_CHOOSE);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("id", id);
 			String result = this.materialService.deleteByPrimaryKey(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "进货单信息删除成功！");
+				return new ExtReturn(true, ResultCode.JHDS_INFO_DELETE_SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "进货单信息删除失败！");
+				return new ExtReturn(false, ResultCode.JHDS_INFO_DELETE_FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

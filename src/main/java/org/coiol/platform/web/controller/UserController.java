@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseModules;
@@ -139,19 +140,19 @@ public class UserController {
 	String userId, HttpSession session) {
 		try {
 			if (StringUtils.isBlank(userId)) {
-				return new ExtReturn(false, "用户ID不能为空！");
+				return new ExtReturn(false, ResultCode.USER_ID_IS_NULL);
 			}
 			if (StringUtils.isBlank(oldPassword)) {
-				return new ExtReturn(false, "原密码不能为空！");
+				return new ExtReturn(false, ResultCode.USER_PASSWORD_IS_NULL);
 			}
 			if (StringUtils.isBlank(newPassword)) {
-				return new ExtReturn(false, "新密码不能为空！");
+				return new ExtReturn(false, ResultCode.NEW_PASSWORD_IS_NULL);
 			}
 			if (StringUtils.isBlank(comparePassword)) {
-				return new ExtReturn(false, "确认密码不能为空！");
+				return new ExtReturn(false, ResultCode.CONFIRM_PASSWORD_IS_NULL);
 			}
 			if (!comparePassword.equals(newPassword)) {
-				return new ExtReturn(false, "两次输入的密码不一致！");
+				return new ExtReturn(false, ResultCode.TWO_PASSWORD_IS_NULL);
 			}
 			BaseUsers user = (BaseUsers) session.getAttribute("CURRENT_USER");
 			Criteria criteria = new Criteria();
@@ -165,12 +166,12 @@ public class UserController {
 			if ("01".equals(result)) {
 				session.removeAttribute("CURRENT_USER");
 				session.invalidate();
-				return new ExtReturn(true, "修改密码成功！请重新登录！");
+				return new ExtReturn(true, ResultCode.MODIFY_PASSWORD_SUCCESS);
 			}
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "修改密码失败!");
+				return new ExtReturn(false, ResultCode.MODIFY_PASSWORD_FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -199,18 +200,18 @@ public class UserController {
 	String userId) {
 		try {
 			if (StringUtils.isBlank(userId)) {
-				return new ExtReturn(false, "用户主键不能为空！");
+				return new ExtReturn(false, ResultCode.USER_ID_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("userId", userId);
 			String result = this.baseUsersService
 					.resetPwdByPrimaryKey(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "重置密码成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "重置密码失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -223,22 +224,22 @@ public class UserController {
 	String userId, HttpSession session) {
 		try {
 			if (StringUtils.isBlank(userId)) {
-				return new ExtReturn(false, "用户主键不能为空！");
+				return new ExtReturn(false, ResultCode.USER_ID_IS_NULL);
 			}
 
 			BaseUsers user = (BaseUsers) session.getAttribute("CURRENT_USER");
 			if (userId.equals(user.getUserId())) {
-				return new ExtReturn(false, "不能删除自己的帐号！");
+				return new ExtReturn(false, ResultCode.NOT_DELETE_CURRENT_COUNT);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("userId", userId);
 			String result = this.baseUsersService.deleteByPrimaryKey(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "删除成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "删除失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -261,11 +262,11 @@ public class UserController {
 			}
 			String result = this.baseUsersService.validateAccount(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "帐号未被注册！");
+				return new ExtReturn(true, ResultCode.ACCOUNT_IS_NOT_REGISTER);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "帐号已经被注册！请重新填写!");
+				return new ExtReturn(false, ResultCode.ACCOUNT_IS_REDIST_REGISTER);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -278,21 +279,21 @@ public class UserController {
 	Collection<String> roleIds) {
 		try {
 			if ((roleIds == null) || (roleIds.size() == 0)) {
-				return new ExtReturn(false, "请至少选择一个角色！");
+				return new ExtReturn(false, ResultCode.ROLE_ID_IS_NULL);
 			}
 			if (StringUtils.isBlank(user.getAccount())) {
-				return new ExtReturn(false, "帐号不能为空！");
+				return new ExtReturn(false, ResultCode.USERNAME_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("roleIds", roleIds);
 			criteria.put("user", user);
 			String result = this.baseUsersService.saveUser(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "用户信息保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "用户信息保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -309,19 +310,19 @@ public class UserController {
 	public Object saveMyinfo(BaseUsers user) {
 		try {
 			if (user == null) {
-				return new ExtReturn(false, "用户不能为空！");
+				return new ExtReturn(false, ResultCode.USER_IS_NULL);
 			}
 			if (StringUtils.isBlank(user.getUserId())) {
-				return new ExtReturn(false, "用户ID不能为空！");
+				return new ExtReturn(false, ResultCode.USER_ID_IS_NULL);
 			}
 			String result = this.baseUsersService
 					.updateByPrimaryKeySelective(user);
 			if ("01".equals(result))
-				return new ExtReturn(true, "用户信息更新成功！请重新登录！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "用户信息更新失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

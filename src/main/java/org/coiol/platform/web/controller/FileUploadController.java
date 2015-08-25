@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.jackjson.JackJson;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
@@ -79,7 +80,7 @@ public class FileUploadController
 
 		      FileUtils.writeByteArrayToFile(saveFile, file.getBytes());
 
-		      String returnMsg = JackJson.fromObjectToJson(new ExtReturn(true, "磁盘空间已经满了！"));
+		      String returnMsg = JackJson.fromObjectToJson(new ExtReturn(true, ResultCode.DISK_SPACE_IS_FULL));
 		      logger.debug("{}", returnMsg);
 		      writer.print(returnMsg);
 		    } catch (Exception e) {

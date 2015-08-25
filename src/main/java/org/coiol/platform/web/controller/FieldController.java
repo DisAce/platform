@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseFields;
@@ -91,29 +92,29 @@ public class FieldController {
 	public Object save(BaseFields fields) {
 		try {
 			if (fields == null) {
-				return new ExtReturn(false, "系统字段不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_FIELD_IS_NULL);
 			}
 			if (StringUtils.isBlank(fields.getField())) {
-				return new ExtReturn(false, "字段不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_FIELD_IS_NULL);
 			}
 			if (StringUtils.isBlank(fields.getFieldName())) {
-				return new ExtReturn(false, "字段名称不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_FIELD_NAME_IS_NULL);
 			}
 			if (StringUtils.isBlank(fields.getValueField())) {
-				return new ExtReturn(false, "字段值不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_FIELD_VALUE_IS_NULL);
 			}
 			if (StringUtils.isBlank(fields.getDisplayField())) {
-				return new ExtReturn(false, "字段显示值不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_FIELD_DISPLAY_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("fields", fields);
 			String result = this.baseFieldsService.saveFields(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -126,17 +127,17 @@ public class FieldController {
 	String fieldId) {
 		try {
 			if (StringUtils.isBlank(fieldId)) {
-				return new ExtReturn(false, "主键不能为空！");
+				return new ExtReturn(false, ResultCode.SYSTEM_PRIMARY_KEY_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("fieldId", fieldId);
 			String result = this.baseFieldsService.delete(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "删除成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "删除失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -153,7 +154,7 @@ public class FieldController {
 			session.getServletContext().removeAttribute("fields");
 			session.getServletContext().setAttribute("fields",
 					this.baseFieldsService.selectAllByExample(criteria));
-			return new ExtReturn(true, "同步成功！");
+			return new ExtReturn(true, ResultCode.SUCCESS);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

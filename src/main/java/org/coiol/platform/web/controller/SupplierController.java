@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseModules;
@@ -162,15 +163,15 @@ public class SupplierController {
 		try {
 			
 			if (StringUtils.isBlank(supplier.getName())) {
-				return new ExtReturn(false, "公司名称不能为空！");
+				return new ExtReturn(false, ResultCode.COMPANT_NAME_IS_NULL);
 			}
 			
 			if (StringUtils.isBlank(supplier.getAddress())) {
-				return new ExtReturn(false, "公司地址不能为空！");
+				return new ExtReturn(false, ResultCode.COMPANT_ADDRESS_IS_NULL);
 			}
 			
 			if (StringUtils.isBlank(supplier.getTelephone())) {
-				return new ExtReturn(false, "公司联系方式不能为空！");
+				return new ExtReturn(false, ResultCode.COMPANT_PHONE_IS_NULL);
 			}
 			
 			Criteria criteria = new Criteria();
@@ -179,11 +180,11 @@ public class SupplierController {
 			String result = this.supplierService.saveSupplier(criteria);
 			
 			if ("01".equals(result))
-				return new ExtReturn(true, "供应商信息保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "供应商信息保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -195,19 +196,19 @@ public class SupplierController {
 	public Object delete(@PathVariable String id) {
 		try {
 			if (StringUtils.isBlank(id)) {
-				return new ExtReturn(false, "供应商主键不能为空！");
+				return new ExtReturn(false, ResultCode.SUPPLIER_PRIMARY_KEY_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("id", id);
 			String result = this.supplierService.deleteByPrimaryKey(criteria);
 			if ("02".equals(result))
-				return new ExtReturn(false, "该供应商数据处于使用状态，不能删除！");
+				return new ExtReturn(false, ResultCode.SUPPLIER_STATUS_USEING_NOT_DELETE);
 			if ("01".equals(result))
-				return new ExtReturn(true, "供应商信息删除成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "供应商信息删除失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);

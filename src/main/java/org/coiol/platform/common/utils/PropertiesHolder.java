@@ -3,17 +3,22 @@ package org.coiol.platform.common.utils;
 
 import java.net.URL;
 import java.util.Properties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-
-public class PropertiesHolder
-	implements InitializingBean
+/**
+ * 资源文件加载
+ * @author Administrator
+ *
+ */
+public class PropertiesHolder implements InitializingBean
 {
 
-	private static Log log = LogFactory.getLog(PropertiesHolder.class);
+	private static PlatFormLogger log = PlatFormLoggerFactory.getPlatFormLogger(PropertiesHolder.class);
+	
 	public static PropertiesHelper properies = null;
 
 	public PropertiesHolder()

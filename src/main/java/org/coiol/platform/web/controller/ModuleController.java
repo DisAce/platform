@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.springmvc.DateConvertEditor;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.jackjson.JackJson;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
@@ -236,7 +237,7 @@ public class ModuleController
 	public Object selectModulesByRoleId(@PathVariable String roleId) {
 		try {
 			if (StringUtils.isBlank(roleId)) {
-				return new ExtReturn(false, "角色ID不能为空！");
+				return new ExtReturn(false, ResultCode.ROLE_ID_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("roleId", roleId);
@@ -254,14 +255,14 @@ public class ModuleController
 		try {
 			ArrayList<Integer> modulesIdList = new ArrayList<Integer>();
 			if (StringUtils.isBlank(roleId)) {
-				return new ExtReturn(false, "角色不能为空！");
+				return new ExtReturn(false, ResultCode.ROLE_NAME_IS_NULL);
 			}
 			if (StringUtils.isBlank(moduleIds)) {
-				return new ExtReturn(false, "选择的资源不能为空！");
+				return new ExtReturn(false, ResultCode.CHOOSE_RESOURCES_IS_NULL);
 			}
 			String[] modules = StringUtils.split(moduleIds, ",");
 			if ((null == modules) || (modules.length == 0)) {
-				return new ExtReturn(false, "选择的资源不能为空！");
+				return new ExtReturn(false, ResultCode.CHOOSE_RESOURCES_IS_NULL);
 			}
 			for (int i = 0; i < modules.length; i++) {
 				modulesIdList.add(new Integer(modules[i]));
@@ -274,11 +275,11 @@ public class ModuleController
 			criteria.put("roleId", roleId);
 			String result = this.baseModulesService.saveModule(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -290,20 +291,20 @@ public class ModuleController
 	public Object save(BaseModules modules) {
 		try {
 			if (modules == null) {
-				return new ExtReturn(false, "模块不能为空！");
+				return new ExtReturn(false, ResultCode.MODULE_NAME_IS_NULL);
 			}
 			if (StringUtils.isBlank(modules.getName())) {
-				return new ExtReturn(false, "模块名称不能为空！");
+				return new ExtReturn(false, ResultCode.MODULE_NAME_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("modules", modules);
 			String result = this.baseModulesService.saveModules(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "保存成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "保存失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -315,17 +316,17 @@ public class ModuleController
 	public Object delete(@PathVariable String moduleId) {
 		try {
 			if (StringUtils.isBlank(moduleId)) {
-				return new ExtReturn(false, "模块主键不能为空！");
+				return new ExtReturn(false, ResultCode.MODULE_KEY_IS_NULL);
 			}
 			Criteria criteria = new Criteria();
 			criteria.put("moduleId", moduleId);
 			String result = this.baseModulesService.delete(criteria);
 			if ("01".equals(result))
-				return new ExtReturn(true, "删除成功！");
+				return new ExtReturn(true, ResultCode.SUCCESS);
 			if ("00".equals(result)) {
-				return new ExtReturn(false, "删除失败！");
+				return new ExtReturn(false, ResultCode.FAILED);
 			}
-			return new ExtReturn(false, result);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
