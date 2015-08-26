@@ -101,7 +101,6 @@ public class LoginController
 	public Object login(@RequestParam String username, @RequestParam String password,BaseLoginLog loginLog, HttpServletRequest request)
 	{
 		try {
-			String msg;
 			// 帐号不能为空！
 			if (StringUtils.isBlank(username)) {
 				return new ExtReturn(false, ResultCode.USERNAME_IS_NULL);
@@ -175,7 +174,6 @@ public class LoginController
     @ResponseBody
     public Object saveFindpwd(BaseUsers user, HttpServletRequest request) {
 		try {
-			String msg;
 			String verifyCode = request.getParameter("verifyCode"); // 获取递交的验证码
 			if (null != user) {
 				if (StringUtils.isBlank(user.getAccount())) {

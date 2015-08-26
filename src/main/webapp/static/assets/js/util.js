@@ -290,8 +290,9 @@ var T = {
 			             waiting = null;
 			            if (showWaiting) {
 			            	waiting = true;
-			            	T.Box.Tips('操作提示','正在处理，请稍等...',T.C.I.InfoClass,T.C.I.InfoIoc,T.C.I.style);
-			            	
+			            	var index = layer.load(1, {
+			            	    shade: [0.1,'#fff'] //0.1透明度的白色背景
+			            	});
 			            }
 			            $.ajax({
 			                url: settings.url,
@@ -302,7 +303,7 @@ var T = {
 			                timeout: timeout,
 			                success: function (response, options) {
 			                    if (waiting != null) {
-			                    	$.gritter.removeAll();
+			                    	 layer.close(index);
 			                    }
 			                        if (settings.callback) { // 回调方法
 			                            settings.callback(response);
@@ -312,7 +313,6 @@ var T = {
 				            	if (settings.callbackError) { // 回调方法
 		                            settings.callbackError(xhr);
 		                        }
-				            	
 								return false;
 				            }
 			            });
@@ -438,28 +438,6 @@ var T = {
 	    			      return true;
 	    			   }
 	    			   window.setTimeout("T.Box.DelayToShowLoading()", 300);
-	    			},
-	    			
-	    			Tips : function (title ,text,className,ioc,style,showButton ){
-	    				$.gritter.add({
-							title: title,
-							text: text,
-							image:ioc,
-							sticky: false,
-							showButton: showButton,
-							style:style,
-							class_name: className,
-							before_open: function(){
-				                    if($('.gritter-item-wrapper').length == 2) {
-				                        return false;
-				                    }
-							 }
-						});
-	    			},
-	    			
-	    			Close:function(){
-	    				$.gritter.removeAll();
-	    	        	return false;
 	    			}
 	    },
 	    

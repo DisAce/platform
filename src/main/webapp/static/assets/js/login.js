@@ -41,31 +41,40 @@ jQuery(document).ready(function() {
                     		window.location.href='main';
     						return;
     					}
-                    	if(data.o == "1"){
-                    		$('#gritter-notice-wrapper').remove();
-                    		T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						var url = 'Authentication/captchaImage.do?t=' + Math.random();
-    						$('#verifyCode').attr('src', url);
-    						return;
-    					}
     					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
+    						if(data.resultCode == 22022){
+    							layer.msg('用户名不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 340086){
+    							layer.msg('密码不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600025){
+    							layer.msg('验证码不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600036){
+    							layer.msg('验证码不正确，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 350086){
+    							layer.msg('用户名或密码错误，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600026){
+    							layer.msg('验证码失效，请重新输入！', {icon: 7});
+        						return;
+    						}
     					}
-    					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
-    					}
+    					
                     }else {
-                    	$('#gritter-notice-wrapper').remove();
-                    	T.Box.Tips('操作提示','服务器出现致命错误、请于管理员联系！',T.C.I.ErrorClass,T.C.I.ErrorIoc,T.C.I.style);
+                    	layer.msg('服务器出现致命错误、请于管理员联系！', {icon: 7});
 						return;
                     }	
 					},
 					callbackError: function(data) {
-						T.Box.Tips('操作提示','未知错误！',T.C.I.ErrorClass,T.C.I.ErrorIoc,T.C.I.style);
+						layer.msg('未知错误！', {icon: 7});
 						return;
 					}
 				});
@@ -96,15 +105,32 @@ jQuery(document).ready(function() {
     						return;
     					}
     					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
+    						if(data.resultCode == 22022){
+    							layer.msg('用户名不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 20001){
+    							layer.msg('验证邮箱不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600025){
+    							layer.msg('验证码不能为空，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600036){
+    							layer.msg('验证码不正确，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 600026){
+    							layer.msg('验证码失效，请重新输入！', {icon: 7});
+        						return;
+    						}
+    						if(data.resultCode == 20000){
+    							layer.msg('请输入正确的帐号和其注册邮箱！', {icon: 7});
+        						return;
+    						}
     					}
-    					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
-    					}
+    					
                     }else {
                     	$('#gritter-notice-wrapper').remove();
                     	T.Box.Tips('操作提示','服务器出现致命错误、请于管理员联系！',T.C.I.ErrorClass,T.C.I.ErrorIoc,T.C.I.style);

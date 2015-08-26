@@ -313,7 +313,7 @@
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='${cdnPath}static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
-		<script type="text/javascript" src="${cdnPath}static/assets/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="${cdnPath}static/assets/js/layer/layer.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/supersized.3.2.7.min.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/supersized-init.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/util.js"></script>
