@@ -15,7 +15,7 @@
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	
-	<!-- enable autowire -->
+	<!-- 激活 @Required @Autowired,JSR 311's @PostConstruct, @PreDestroy and @Resource 等标注 -->
 	<context:annotation-config />
 	
 	<!-- decrypt password in jdbc.properties -->

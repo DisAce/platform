@@ -25,6 +25,7 @@ import org.coiol.platform.core.model.Criteria;
 import org.coiol.platform.core.model.ExceptionReturn;
 import org.coiol.platform.core.model.ExtReturn;
 import org.coiol.platform.core.model.Tree;
+import org.coiol.platform.core.util.EncryptUtil;
 import org.coiol.platform.service.BaseModulesService;
 import org.coiol.platform.service.BaseUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +156,7 @@ public class LoginController
 				SessionUtil.setStatus(1);
 				return new ExtReturn(false, ResultCode.USER_OR_PASSWORD_IS_FAILD);
 			}
-			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR);
+			return new ExtReturn(false, ResultCode.OTHER_SERVER_ERROR,result);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return new ExceptionReturn(e);
@@ -213,7 +214,16 @@ public class LoginController
 	@RequestMapping(value={"/resetpwd/{token}/{userId}"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
 	public String resetpwd(@PathVariable String token, @PathVariable String userId, Model model)
 	{
-		BaseUsers user = baseUsersService.selectByPrimaryKey(userId);
+		String suserId;
+		BaseUsers user = null ;
+		try {
+			suserId = EncryptUtil.decrypt(userId);
+			user = baseUsersService.selectByPrimaryKey(suserId);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (user == null || !user.getPassword().equals(token.toLowerCase()) || compareTo(user.getLastLoginTime()))
 		{
 			model.addAttribute("error", "链接已经失效！");

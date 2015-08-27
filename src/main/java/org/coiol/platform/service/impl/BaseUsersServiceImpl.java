@@ -23,16 +23,19 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.coiol.platform.common.utils.MethodUtil;
+import org.coiol.platform.common.utils.PropertyHolder;
+import org.coiol.platform.core.constant.ResultCode;
 import org.coiol.platform.core.log.PlatFormLogger;
 import org.coiol.platform.core.log.PlatFormLoggerFactory;
 import org.coiol.platform.core.model.BaseUserRole;
 import org.coiol.platform.core.model.BaseUsers;
 import org.coiol.platform.core.model.Criteria;
+import org.coiol.platform.core.model.UserToken;
 import org.coiol.platform.dao.BaseUserRoleMapper;
 import org.coiol.platform.dao.BaseUsersMapper;
 import org.coiol.platform.service.BaseUsersService;
+import org.coiol.platform.service.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,27 +52,9 @@ public class BaseUsersServiceImpl implements BaseUsersService
 
   @Autowired
   private BaseUserRoleMapper baseUserRoleMapper;
-
-  @Value("${email.host:smtp.163.com}")
-  private String emailHost;
-
-  @Value("${email.account:test@whty.com.cn}")
-  private String emailAccount;
-
-  @Value("${email.password:test}")
-  private String emailPassword;
-
-  @Value("${system.url:http://localhost:8888/}")
-  private String systemUrl;
-
-  @Value("${reset.password:123456}")
-  private String resetPassword;
-
-  @Value("${limit.millis:3600000}")
-  private Long millis;
-
-  @Value("${limit.millis.text:一小时}")
-  private String millisText;
+  
+  @Autowired
+  private UserTokenService userTokenService;
   
   public static MethodUtil util = new MethodUtil();
   
@@ -83,7 +68,7 @@ public class BaseUsersServiceImpl implements BaseUsersService
     BaseUsers dataBaseUser = (BaseUsers)list.get(0);
 
     if ((dataBaseUser.getErrorCount().shortValue() >= 3) && (compareTo(dataBaseUser.getLastLoginTime()))) {
-    	return (new StringBuilder()).append("请你联系管理员，或者").append(millisText).append("之后再次尝试！").toString();
+    	return (new StringBuilder()).append("请你联系管理员，或者").append(PropertyHolder.getProperty("limit.millis.text")).append("之后再次尝试！").toString();
     }
     String password = DigestUtils.md5Hex(criteria.getAsString("passwordIn"));
     String passwordIn = encrypt(password, criteria.getAsString("account"));
@@ -209,7 +194,7 @@ public class BaseUsersServiceImpl implements BaseUsersService
     BaseUsers user = new BaseUsers();
     user.setUserId(userId);
     user.setErrorCount(Short.valueOf((short)0));
-    user.setPassword(encrypt(this.resetPassword, oldUser.getAccount()));
+    user.setPassword(encrypt(PropertyHolder.getProperty("reset.password"), oldUser.getAccount()));
     return this.baseUsersMapper.updateByPrimaryKeySelective(user) > 0 ? "01" : "00";
   }
 
@@ -283,7 +268,7 @@ public class BaseUsersServiceImpl implements BaseUsersService
     c.setTime(date);
     long lastly = c.getTimeInMillis();
 
-    return now - lastly <= this.millis.longValue();
+    return now - lastly <= Long.parseLong(PropertyHolder.getProperty("limit.millis"));
   }
 
   @Transactional(readOnly=false, propagation=Propagation.REQUIRED, rollbackFor={Exception.class})
@@ -298,22 +283,29 @@ public class BaseUsersServiceImpl implements BaseUsersService
     }
     BaseUsers dataBaseUser = (BaseUsers)list.get(0);
 
-    String token = encrypt(RandomStringUtils.randomAlphanumeric(10), dataBaseUser.getAccount());
-    
-    BaseUsers updateUser = new BaseUsers();
-    updateUser.setUserId(dataBaseUser.getUserId());
-    updateUser.setLastLoginTime(new Date());
-    updateUser.setPassword(token);
-    this.baseUsersMapper.updateByPrimaryKeySelective(updateUser);
+    //生成用户重置密码token
+    String token = encrypt(DigestUtils.md5Hex(RandomStringUtils.randomAlphanumeric(10)), dataBaseUser.getAccount());
+    Criteria criteria = new Criteria();
+    UserToken ut = new UserToken();
+    ut.setId(util.getUid());
+    ut.setAccount(dataBaseUser.getAccount());
+    ut.setToken(token);
+    ut.setStatus(2);
+    ut.setCreateTime(new Date());
+    criteria.put("userToken", ut);
+    String result = userTokenService.saveUserToken(criteria);
+    if(ResultCode.TRUE.equals(result)){
+    	 String title = "亲爱的 " + dataBaseUser.getAccount() + "，请重新设置你的帐户密码！";
+    	   
+    	    String url = PropertyHolder.getProperty("system.url") + dataBaseUser.getAccount()+ "/" + token.toUpperCase();
+    	    url = "<a href='" + url + "'>点此重置密码</a>";
 
-    String title = "亲爱的 " + dataBaseUser.getAccount() + "，请重新设置你的帐户密码！";
-    String Password = encrypt(dataBaseUser.getUserId(), user.getAccount());
-    String url = this.systemUrl + token.toUpperCase() + "/" + Password.toUpperCase();
-    url = "<a href='" + url + "'>点此重置密码</a>";
-
-    String body = "请点击下面链接，重新设置您的密码：<br/>" + url + " ,此链接一小时有效!<br/>" + "如果该链接无法点击，请直接拷贝以上网址到浏览器地址栏中访问。";
-    execSend(dataBaseUser.getEmail(), title, body);
-    return "01";
+    	    String body = "请点击下面链接，重新设置您的密码：<br/>" + url + " ,此链接一小时有效!<br/>" + "如果该链接无法点击，请直接拷贝以上网址到浏览器地址栏中访问。";
+    	    execSend(dataBaseUser.getEmail(), title, body);
+    	    return ResultCode.TRUE;
+    }else{
+    	return ResultCode.FALSE;
+    }
   }
 
   private boolean execSend(String address, String title, String body)
@@ -321,19 +313,19 @@ public class BaseUsersServiceImpl implements BaseUsersService
   {
     Properties props = new Properties();
 
-    props.put("mail.smtp.host", this.emailHost);
+    props.put("mail.smtp.host", PropertyHolder.getProperty("email.host"));
     props.put("mail.smtp.auth", "true");
 
     Session session = Session.getDefaultInstance(props, new Authenticator() {
       public PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(BaseUsersServiceImpl.this.emailAccount, BaseUsersServiceImpl.this.emailPassword);
+        return new PasswordAuthentication(PropertyHolder.getProperty("email.account"), PropertyHolder.getProperty("email.password"));
       }
     });
     MimeMessage message = new MimeMessage(session);
 
     message.setSubject(title);
 
-    message.setFrom(new InternetAddress(this.emailAccount));
+    message.setFrom(new InternetAddress(PropertyHolder.getProperty("email.account")));
 
     message.addRecipient(Message.RecipientType.TO, new InternetAddress(address));
 

@@ -12,17 +12,18 @@
 	</plugins>
 	<mappers>
 		<mapper resource="sqlmap/common_SqlMap.xml" />
-		<mapper resource="sqlmap/BaseModulesMapper.xml" />
-		<mapper resource="sqlmap/BaseLoginLogMapper.xml" />
-		<mapper resource="sqlmap/BaseRoleModuleMapper.xml" />
-		<mapper resource="sqlmap/BaseRolesMapper.xml" />
-		<mapper resource="sqlmap/BaseUserRoleMapper.xml" />
-		<mapper resource="sqlmap/BaseUsersMapper.xml" />
-		<mapper resource="sqlmap/BaseFieldsMapper.xml" />
-		<mapper resource="sqlmap/BaseSupplierMapper.xml" />
-		<mapper resource="sqlmap/BaseSupplierPriceMapper.xml" />
-		<mapper resource="sqlmap/BaseMaterialMapper.xml" />
-		<mapper resource="sqlmap/BaseShipmentMapper.xml" />
+		<mapper resource="sqlmap/ModulesMapper.xml" />
+		<mapper resource="sqlmap/LoginLogMapper.xml" />
+		<mapper resource="sqlmap/RoleModuleMapper.xml" />
+		<mapper resource="sqlmap/RolesMapper.xml" />
+		<mapper resource="sqlmap/UserRoleMapper.xml" />
+		<mapper resource="sqlmap/UsersMapper.xml" />
+		<mapper resource="sqlmap/FieldsMapper.xml" />
+		<mapper resource="sqlmap/SupplierMapper.xml" />
+		<mapper resource="sqlmap/SupplierPriceMapper.xml" />
+		<mapper resource="sqlmap/MaterialMapper.xml" />
+		<mapper resource="sqlmap/ShipmentMapper.xml" />
+		<mapper resource="sqlmap/UserTokenMapper.xml" /> 
 	</mappers>
 	
 </configuration>

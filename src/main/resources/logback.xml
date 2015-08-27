@@ -42,7 +42,7 @@
 	<!-- <logger name="org.springframework.web.servlet.mvc.method.annotation" level="ERROR" /> -->
 	<logger name="com.coiol.platform" level="DEBUG" />
 
-	<root level="info">
+	<root level="DEBUG">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="logfile" />
 	</root>

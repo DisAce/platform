@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.coiol.platform.core.log.PlatFormLogger;
@@ -33,7 +32,7 @@ public class PropertyHolder
 {
 
 	 private static final PlatFormLogger LOG = PlatFormLoggerFactory.getPlatFormLogger(PropertyHolder.class);
-	    private static final Map<String, String> PROPERTIES = new HashMap<String, String>();
+	 private static final Map<String, String> PROPERTIES = new HashMap<String, String>();
 
 	    static {
 	        init();
@@ -103,17 +102,8 @@ public class PropertyHolder
 	            	 LOG.info("  " + entry.getKey() + " = " + entry.getValue());
 	            }  
 	            LOG.info("***********************************************************");
-	            //指定日志输出语言
-	            LOG.setLocale(getLogLanguage());
 	    }
-	    /**
-	     * 日志使用什么语言输出
-	     * @return 
-	     */
-	    public static Locale getLogLanguage(){
-	       String language = getProperty("log.locale.language");
-	       return Locale.forLanguageTag(language);
-	    }
+	   
 
 	    public static boolean getBooleanProperty(String name) {
 	        String value = PROPERTIES.get(name);

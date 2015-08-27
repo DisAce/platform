@@ -19,36 +19,34 @@
 	</context:component-scan>
 	<!-- 加入Aspectj配置 -->
 	<aop:aspectj-autoproxy  proxy-target-class="true"/>
+	
+	
 	<!-- controller层的属性和配置文件读入 ,多个用逗号隔开 <context:property-placeholder location="classpath:/config/others/config.properties" /> -->
 
-	<!-- 应用属性文件读入 -->
+	<!-- 应用属性文件读入 
 	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
-				<!-- 标准配置 -->
 				<value>classpath:/config/others/config.properties</value>
 			</list>
 		</property>
 		<property name="fileEncoding" value="utf-8" />
 	</bean>
-
-	<!-- 用于持有applicationProperties,将properties转变为静态方法使用,PropertiesHolder.getProperty("somekey") -->
+	-->
+	<!-- 用于持有applicationProperties,将properties转变为静态方法使用,PropertiesHolder.getProperty("somekey") 
 	<bean class="org.coiol.platform.common.utils.PropertiesHolder">
 		<property name="properties" ref="applicationProperties" />
 	</bean>
-
-	<!-- PropertyPlaceholderConfigurer,用于spring ${placeholder}的解析 -->
+	-->
+	<!-- PropertyPlaceholderConfigurer,用于spring ${placeholder}的解析-->
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-		<property name="properties" ref="applicationProperties" />
 	</bean>
-
-	<!-- 激活 @Required @Autowired,JSR 311's @PostConstruct, @PreDestroy and @Resource 等标注 -->
-	<context:annotation-config />
+ 	
 	
 	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
-	<!-- <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/> -->
+	<!--  <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>  -->
 	<mvc:resources mapping="/static/**" location="/static/" />
 	
 	

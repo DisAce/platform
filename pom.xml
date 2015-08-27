@@ -48,7 +48,6 @@
 		<jcl-over-slf4j.version>1.6.3</jcl-over-slf4j.version>
 		<logback-access.version>1.0.0</logback-access.version>
 		<logback-classic.version>1.0.0</logback-classic.version>
-		<javaee-api.version>7.0</javaee-api.version>
 		<junit.version>4.12</junit.version>
 		<asm.version>3.3.1</asm.version>
 		<quartz.version>1.8.4</quartz.version>
@@ -446,13 +445,7 @@
 			<artifactId>kaptcha</artifactId>
 			<version>${kaptcha.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>${mail.version}</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
@@ -475,6 +468,16 @@
 			<groupId>com.cloudhopper.proxool</groupId>
 			<artifactId>proxool</artifactId>
 			<version>${proxool.version}</version>
+			<exclusions>
+		         <exclusion>
+		              <groupId>geronimo-spec</groupId>
+  					  <artifactId>geronimo-spec-javamail</artifactId>
+		         </exclusion>
+		         <exclusion>
+		               <groupId>geronimo-spec</groupId>
+  					   <artifactId>geronimo-spec-jms</artifactId>
+		         </exclusion>
+		     </exclusions>
 		</dependency>
 
 		<dependency>
@@ -500,8 +503,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
 		</dependency>
-		
-		
 		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -537,6 +538,12 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${mail.version}</version>
 		</dependency>
 	</dependencies>
 	

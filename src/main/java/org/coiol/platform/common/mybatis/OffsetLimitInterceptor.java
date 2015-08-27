@@ -1,5 +1,6 @@
 package org.coiol.platform.common.mybatis;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.ibatis.mapping.BoundSql;
@@ -11,14 +12,20 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.session.RowBounds;
-
 import org.coiol.platform.common.mybatis.dialect.Dialect;
 import org.coiol.platform.common.utils.PropertiesHelper;
+import org.coiol.platform.core.authority.interceptor.DataAuthorityValue;
+import org.coiol.platform.core.jackjson.JackJson;
+import org.coiol.platform.core.log.PlatFormLogger;
+import org.coiol.platform.core.log.PlatFormLoggerFactory;
 
-@Intercepts( { @org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "query", args = {
-		MappedStatement.class, Object.class, RowBounds.class,
-		org.apache.ibatis.session.ResultHandler.class }) })
+@Intercepts({
+		@org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "query", args = {
+				MappedStatement.class, Object.class, RowBounds.class,
+				org.apache.ibatis.session.ResultHandler.class }) })
 public class OffsetLimitInterceptor implements Interceptor {
+	private static final PlatFormLogger log = PlatFormLoggerFactory.getPlatFormLogger(OffsetLimitInterceptor.class);
+
 	static int MAPPED_STATEMENT_INDEX = 0;
 	static int PARAMETER_INDEX = 1;
 	static int ROWBOUNDS_INDEX = 2;
@@ -26,6 +33,14 @@ public class OffsetLimitInterceptor implements Interceptor {
 	Dialect dialect;
 
 	public Object intercept(Invocation invocation) throws Throwable {
+		String dataSource = DataAuthorityValue.getAuthorityDataSource();
+		String authorityItems = DataAuthorityValue.getAuthorityitems();
+		HashMap<?, ?> dataAuthority = DataAuthorityValue.getDataAuthority();
+		HashMap<?, ?> authoritySql = DataAuthorityValue.getAuthoritySql();
+
+		log.debug("---------数据源:{}-------权限控制字段:{}-------Sql转换配置:{}-------用户权限：{}",
+				new Object[] { dataSource, authorityItems, JackJson.fromObjectToJson(authoritySql).toString(),
+						JackJson.fromObjectToJson(dataAuthority).toString() });
 		processIntercept(invocation.getArgs());
 		return invocation.proceed();
 	}
@@ -37,8 +52,7 @@ public class OffsetLimitInterceptor implements Interceptor {
 		int offset = rowBounds.getOffset();
 		int limit = rowBounds.getLimit();
 
-		if ((this.dialect.supportsLimit())
-				&& ((offset != 0) || (limit != 2147483647))) {
+		if ((this.dialect.supportsLimit()) && ((offset != 0) || (limit != 2147483647))) {
 			BoundSql boundSql = ms.getBoundSql(parameter);
 			String sql = boundSql.getSql().trim();
 			if (this.dialect.supportsLimitOffset()) {
@@ -53,48 +67,44 @@ public class OffsetLimitInterceptor implements Interceptor {
 
 			BoundSql newBoundSql = copyFromBoundSql(ms, boundSql, sql);
 
-			MappedStatement newMs = copyFromMappedStatement(ms,
-					new BoundSqlSqlSource(newBoundSql));
+			MappedStatement newMs = copyFromMappedStatement(ms, new BoundSqlSqlSource(newBoundSql));
 			queryArgs[MAPPED_STATEMENT_INDEX] = newMs;
 		}
 	}
 
-	private BoundSql copyFromBoundSql(MappedStatement ms, BoundSql boundSql,
-			String sql) {
-		BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), sql,
-				boundSql.getParameterMappings(), boundSql.getParameterObject());
+	private BoundSql copyFromBoundSql(MappedStatement ms, BoundSql boundSql, String sql) {
+		BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), sql, boundSql.getParameterMappings(),
+				boundSql.getParameterObject());
 		for (ParameterMapping mapping : boundSql.getParameterMappings()) {
 			String prop = mapping.getProperty();
 			if (boundSql.hasAdditionalParameter(prop)) {
-				newBoundSql.setAdditionalParameter(prop, boundSql
-						.getAdditionalParameter(prop));
+				newBoundSql.setAdditionalParameter(prop, boundSql.getAdditionalParameter(prop));
 			}
 		}
 		return newBoundSql;
 	}
 
-	private MappedStatement copyFromMappedStatement(MappedStatement ms,
-			SqlSource newSqlSource) {
-		MappedStatement.Builder builder = new MappedStatement.Builder(ms
-				.getConfiguration(), ms.getId(), newSqlSource, ms
-				.getSqlCommandType());
+	private MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
+		MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(), newSqlSource,
+				ms.getSqlCommandType());
 
 		builder.resource(ms.getResource());
 		builder.fetchSize(ms.getFetchSize());
 		builder.statementType(ms.getStatementType());
 		builder.keyGenerator(ms.getKeyGenerator());
-		
-		/** 下面这句ms.getKeyProperty()报错，原因是新包修改了MappedStatement类中keyProperty的数据类型， 
-         * 将String改为String[]，相应的get方法由getKeyProperty()改为getKeyProperties() 
-         * 因此，这里我是如下修改的，原因是在分页查询时，我跟踪此处的keyProperties为null，而其他查询并未使用此处 
-         * */
-          String[] s = ms.getKeyProperties(); 
-          if(s == null){ 
-           builder.keyProperty(null); 
-          }else{ 
-           builder.keyProperty(s[0]); 
-         } 
-		//builder.keyProperty(ms.getKeyProperty());
+
+		/**
+		 * 下面这句ms.getKeyProperty()报错，原因是新包修改了MappedStatement类中keyProperty的数据类型，
+		 * 将String改为String[]，相应的get方法由getKeyProperty()改为getKeyProperties()
+		 * 因此，这里我是如下修改的，原因是在分页查询时，我跟踪此处的keyProperties为null，而其他查询并未使用此处
+		 */
+		String[] s = ms.getKeyProperties();
+		if (s == null) {
+			builder.keyProperty(null);
+		} else {
+			builder.keyProperty(s[0]);
+		}
+		// builder.keyProperty(ms.getKeyProperty());
 
 		builder.timeout(ms.getTimeout());
 
@@ -115,17 +125,13 @@ public class OffsetLimitInterceptor implements Interceptor {
 	}
 
 	public void setProperties(Properties properties) {
-		String dialectClass = new PropertiesHelper(properties)
-				.getRequiredProperty("dialectClass");
+		String dialectClass = new PropertiesHelper(properties).getRequiredProperty("dialectClass");
 		try {
 			this.dialect = ((Dialect) Class.forName(dialectClass).newInstance());
 		} catch (Exception e) {
-			throw new RuntimeException(
-					"cannot create dialect instance by dialectClass:"
-							+ dialectClass, e);
+			throw new RuntimeException("cannot create dialect instance by dialectClass:" + dialectClass, e);
 		}
-		System.out.println(OffsetLimitInterceptor.class.getSimpleName()
-				+ ".dialect=" + dialectClass);
+		System.out.println(OffsetLimitInterceptor.class.getSimpleName() + ".dialect=" + dialectClass);
 	}
 
 	public static class BoundSqlSqlSource implements SqlSource {
