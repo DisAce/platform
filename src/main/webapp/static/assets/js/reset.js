@@ -35,31 +35,37 @@ jQuery(document).ready(function() {
                     		window.location.href='main';
     						return;
     					}
-                    	if(data.o == "1"){
-                    		$('#gritter-notice-wrapper').remove();
-                    		T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						var url = 'Authentication/captchaImage.do?t=' + Math.random();
-    						$('#verifyCode').attr('src', url);
+                    	if(data.success){
+                    		layer.msg('密码重置成功，请重新登录！', {icon: 1});
+                    		window.location.href='login';
     						return;
     					}
     					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
+    						if(data.resultCode == 340136){
+    							layer.msg('修改密码失败！', {icon: 5});
+        						return;
+    						}
+    						if(data.resultCode == 340096){
+    							layer.msg('新密码不能为空！', {icon: 5});
+        						return;
+    						}
+    						if(data.resultCode == 340106){
+    							layer.msg('确认密码不能为空！', {icon: 5});
+        						return;
+    						}
+    						if(data.resultCode == 340116){
+    							layer.msg('两次输入的密码不一致！', {icon: 5});
+        						return;
+    						}
     					}
-    					if(!data.success){
-    						$('#gritter-notice-wrapper').remove();
-    						T.Box.Tips('操作提示',data.msg,T.C.I.WarningClass,T.C.I.WarningIoc,T.C.I.style);
-    						return;
-    					}
+    					
                     }else {
-                    	$('#gritter-notice-wrapper').remove();
-                    	T.Box.Tips('操作提示','服务器出现致命错误、请于管理员联系！',T.C.I.ErrorClass,T.C.I.ErrorIoc,T.C.I.style);
+                    	layer.msg('服务器出现致命错误、请于管理员联系！', {icon: 2});
 						return;
                     }	
 					},
 					callbackError: function(data) {
-						T.Box.Tips('操作提示','未知错误！',T.C.I.ErrorClass,T.C.I.ErrorIoc,T.C.I.style);
+						layer.msg('未知错误！', {icon: 2});
 						return;
 					}
 				});

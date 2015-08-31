@@ -220,7 +220,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 									<ul class="dropdown-menu dropdown-navbar">
 										<li>
 											<a href="#">
-												<img src="assets/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+												<img src="static/assets/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
 												<span class="msg-body">
 													<span class="msg-title">
 														<span class="blue">Alex:</span>
@@ -237,7 +237,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 
 										<li>
 											<a href="#">
-												<img src="assets/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
+												<img src="static/assets/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
 												<span class="msg-body">
 													<span class="msg-title">
 														<span class="blue">Susan:</span>
@@ -254,7 +254,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 
 										<li>
 											<a href="#">
-												<img src="assets/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
+												<img src="static/assets/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
 												<span class="msg-body">
 													<span class="msg-title">
 														<span class="blue">Bob:</span>
@@ -271,7 +271,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 
 										<li>
 											<a href="#">
-												<img src="assets/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
+												<img src="static/assets/avatars/avatar2.png" class="msg-photo" alt="Kate's Avatar" />
 												<span class="msg-body">
 													<span class="msg-title">
 														<span class="blue">Kate:</span>
@@ -288,7 +288,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 
 										<li>
 											<a href="#">
-												<img src="assets/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
+												<img src="static/assets/avatars/avatar5.png" class="msg-photo" alt="Fred's Avatar" />
 												<span class="msg-body">
 													<span class="msg-title">
 														<span class="blue">Fred:</span>
@@ -316,7 +316,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 
 						<li class="light-blue">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="assets/avatars/user.jpg" alt="${user.realName} Photo" />
+								<img class="nav-user-photo" src="static/assets/avatars/user.jpg" alt="${user.realName} Photo" />
 								<span class="user-info">
 									<small>欢迎,</small>
 									${user.realName}
@@ -466,6 +466,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 		<script type="text/javascript" src="${sysPath}static/assets/js/jquery.gritter.min.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/js/FrameTab.js"></script>
 		<!-- common-->
+		<script type="text/javascript" src="${cdnPath}static/assets/js/layer/layer.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/js/util.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/util.js"></script>
 		<!-- ace scripts -->

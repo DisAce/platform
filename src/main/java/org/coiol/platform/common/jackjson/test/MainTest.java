@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.coiol.platform.common.utils.MethodUtil;
 import org.coiol.platform.common.utils.PropertiesHolder;
 import org.coiol.platform.core.util.ClassLoaderUtil;
 import org.coiol.platform.core.util.FileDigest;
@@ -30,7 +31,9 @@ public class MainTest
 		throws Exception
 	{
 		String str = "admin";
-		System.out.println(DigestUtils.md5Hex(str + "{admin}"));
+		MethodUtil md = new MethodUtil();
+		System.out.println("================="+md.getDES("c5a704f01300a735",1));
+		System.out.println(DigestUtils.md5Hex(str));
 		
 		 String password = DigestUtils.md5Hex("admin");
 		 System.out.println(DigestUtils.md5Hex(password + "{admin}"));

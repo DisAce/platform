@@ -56,7 +56,7 @@ public class BaseUsersServiceImpl implements BaseUsersService
   @Autowired
   private UserTokenService userTokenService;
   
-  public static MethodUtil util = new MethodUtil();
+  public static MethodUtil util = MethodUtil.getInstance();
   
   public String selectByBaseUser(Criteria criteria)
   {
@@ -284,7 +284,9 @@ public class BaseUsersServiceImpl implements BaseUsersService
     BaseUsers dataBaseUser = (BaseUsers)list.get(0);
 
     //生成用户重置密码token
-    String token = encrypt(DigestUtils.md5Hex(RandomStringUtils.randomAlphanumeric(10)), dataBaseUser.getAccount());
+    String desDes = RandomStringUtils.randomAlphanumeric(10) + "|" +dataBaseUser.getUserId();
+    //encrypt(DigestUtils.md5Hex(RandomStringUtils.randomAlphanumeric(10)), dataBaseUser.getAccount());
+    String token = util.getDES(desDes,0);
     Criteria criteria = new Criteria();
     UserToken ut = new UserToken();
     ut.setId(util.getUid());
@@ -295,9 +297,13 @@ public class BaseUsersServiceImpl implements BaseUsersService
     criteria.put("userToken", ut);
     String result = userTokenService.saveUserToken(criteria);
     if(ResultCode.TRUE.equals(result)){
+    	 	BaseUsers updateUser = new BaseUsers();
+    	    updateUser.setUserId(dataBaseUser.getUserId());
+    	    updateUser.setLastLoginTime(new Date());
+    	    this.baseUsersMapper.updateByPrimaryKeySelective(updateUser);
     	 String title = "亲爱的 " + dataBaseUser.getAccount() + "，请重新设置你的帐户密码！";
     	   
-    	    String url = PropertyHolder.getProperty("system.url") + dataBaseUser.getAccount()+ "/" + token.toUpperCase();
+    	    String url = PropertyHolder.getProperty("system.url") + token.toUpperCase();
     	    url = "<a href='" + url + "'>点此重置密码</a>";
 
     	    String body = "请点击下面链接，重新设置您的密码：<br/>" + url + " ,此链接一小时有效!<br/>" + "如果该链接无法点击，请直接拷贝以上网址到浏览器地址栏中访问。";

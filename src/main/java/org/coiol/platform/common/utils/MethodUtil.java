@@ -24,40 +24,61 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MethodUtil {
-	
-	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(MethodUtil.class);	
+
+	private static final PlatFormLogger logger = PlatFormLoggerFactory.getPlatFormLogger(MethodUtil.class);
+
+	// 密钥是16位长度的byte[]进行Base64转换后得到的字符串
+	public static String key = "LmMGStGtOpF4xNyvYt54EQ==";
+
+	private volatile static MethodUtil schedule;
+
+	/*********************************************************************************/
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>静态方法<br>
+	 * <b>作者：</b>eingxin<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @return
+	 */
+	public static MethodUtil getInstance() {
+		if (schedule == null) {
+			synchronized (MethodUtil.class) {
+				if (schedule == null) {
+					schedule = new MethodUtil();
+				}
+			}
+		}
+		return schedule;
+	}
+
 	/**
 	 * 获取登录用户的IP地址
 	 * 
 	 * @param request
 	 * @return
 	 */
-	public static String getIpAddr(HttpServletRequest request)
-	{
+	public static String getIpAddr(HttpServletRequest request) {
 		String ip = request.getHeader("X-Forwarded-For");
 		logger.debug("1- X-Forwarded-For ip={}", ip);
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("Proxy-Client-IP");
 			logger.debug("2- Proxy-Client-IP ip={}", ip);
 		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("WL-Proxy-Client-IP");
 			logger.debug("3- WL-Proxy-Client-IP ip={}", ip);
 		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("HTTP_CLIENT_IP");
 			logger.debug("4- HTTP_CLIENT_IP ip={}", ip);
 		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
 			logger.debug("5- HTTP_X_FORWARDED_FOR ip={}", ip);
 		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-		{
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
 			logger.debug("6- getRemoteAddr ip={}", ip);
 		}
@@ -67,20 +88,24 @@ public class MethodUtil {
 		logger.info("finally ip={}", ip);
 		return ip;
 	}
-	
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>MD5加密方法<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param str
-     * @param encoding  default UTF-8
-     * @param no_Lower_Upper  0,1,2
-     * @return
-     */
-	public String getMD5(String str,String encoding,int no_Lower_Upper) {
-		if(null==encoding)encoding="utf-8";
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>MD5加密方法<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param str
+	 * @param encoding
+	 *            default UTF-8
+	 * @param no_Lower_Upper
+	 *            0,1,2
+	 * @return
+	 */
+	public String getMD5(String str, String encoding, int no_Lower_Upper) {
+		if (null == encoding)
+			encoding = "utf-8";
 		StringBuffer sb = new StringBuffer();
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -91,29 +116,29 @@ public class MethodUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(no_Lower_Upper==0){
+		if (no_Lower_Upper == 0) {
 			return sb.toString();
 		}
-		if(no_Lower_Upper==1){
+		if (no_Lower_Upper == 1) {
 			return sb.toString().toLowerCase();
 		}
-		if(no_Lower_Upper==2){
+		if (no_Lower_Upper == 2) {
 			return sb.toString().toUpperCase();
 		}
 		return null;
 	}
-	
-	
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>DES<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param arrBTmp
-     * @return
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>DES<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param arrBTmp
+	 * @return
+	 * @throws Exception
+	 */
 	private Key getKey(byte[] arrBTmp) throws Exception {
 		byte[] arrB = new byte[8];// 创建一个空的8位字节数组（默认值为0）
 		for (int i = 0; i < arrBTmp.length && i < arrB.length; i++) { // 将原始字节数组转换为8位
@@ -122,16 +147,18 @@ public class MethodUtil {
 		Key key = new javax.crypto.spec.SecretKeySpec(arrB, "DES");// 生成密钥
 		return key;
 	}
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>DES<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param strIn
-     * @return
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>DES<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param strIn
+	 * @return
+	 * @throws Exception
+	 */
 	private static byte[] hexStr2ByteArr(String strIn) throws Exception {
 		byte[] arrB = strIn.getBytes();
 		int iLen = arrB.length;
@@ -144,16 +171,18 @@ public class MethodUtil {
 		}
 		return arrOut;
 	}
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>DES<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param arrB
-     * @return
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>DES<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param arrB
+	 * @return
+	 * @throws Exception
+	 */
 	private static String byteArr2HexStr(byte[] arrB) throws Exception {
 		int iLen = arrB.length;
 		// 每个byte用两个字符才能表示，所以字符串的长度是数组长度的两倍
@@ -172,27 +201,32 @@ public class MethodUtil {
 		}
 		return sb.toString();
 	}
+
 	/**
 	 * 
 	 * <br>
-	 * <b>功能：</b>DES方法  0为加密,1为解密<br>
+	 * <b>功能：</b>DES方法 0为加密,1为解密<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
-	 * @param deskey  密钥
-	 * @param str    内容
-	 * @param type  0为加密,1为解密
+	 * 
+	 * @param deskey
+	 *            密钥
+	 * @param str
+	 *            内容
+	 * @param type
+	 *            0为加密,1为解密
 	 * @return
 	 */
-	public String getDES(String deskey, String str, int type) {
+	public String getDES(String str, int type) {
 		Cipher encryptCipher = null;
 		Cipher decryptCipher = null;
 		Security.addProvider(new com.sun.crypto.provider.SunJCE());
 		try {
-			Key key = getKey(deskey.getBytes());
+			Key _key = getKey(key.getBytes());
 			encryptCipher = Cipher.getInstance("DES");
-			encryptCipher.init(Cipher.ENCRYPT_MODE, key);
+			encryptCipher.init(Cipher.ENCRYPT_MODE, _key);
 			decryptCipher = Cipher.getInstance("DES");
-			decryptCipher.init(Cipher.DECRYPT_MODE, key);
+			decryptCipher.init(Cipher.DECRYPT_MODE, _key);
 			if (type == 0) { // 0为加密
 				return byteArr2HexStr(encryptCipher.doFinal(str.getBytes()));
 			} else {
@@ -202,39 +236,33 @@ public class MethodUtil {
 			return null;
 		}
 	}
-	/*********************************************************************************/
+
+
 	/**
 	 * 
 	 * <br>
-	 * <b>功能：</b>静态方法<br>
+	 * <b>功能：</b>方法功能描述<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param min
+	 * @param max
 	 * @return
 	 */
-	public static MethodUtil getInstance(){
-		return new MethodUtil();
-	}
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>方法功能描述<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param min
-     * @param max
-     * @return
-     */
 	public int getRandom(int min, int max) {
 		// int a = (int) (Math.random() * (44) + 23); //产生的[23,67)的随机数
 		return (int) (Math.random() * (max - min) + min);
 	}
+
 	/**
 	 * 
 	 * <br>
 	 * <b>功能：</b>获取随机数从1开始,格式10000000-99999999<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
-	 * @param number 1
+	 * 
+	 * @param number
+	 *            1
 	 * @return
 	 */
 	public int getRandom(int number) {
@@ -246,29 +274,33 @@ public class MethodUtil {
 		}
 		return this.getRandom(min, max);
 	}
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>获取日期方法<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param type 0=yyyy-MM-dd HH:mm:ss,1=yyyyMMddHHmmss,2=yyyyMMdd
-     * @param formatStr null 自定义
-     * @return
-     */
-	public String getDate(int type,String formatStr){
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>获取日期方法<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param type
+	 *            0=yyyy-MM-dd HH:mm:ss,1=yyyyMMddHHmmss,2=yyyyMMdd
+	 * @param formatStr
+	 *            null 自定义
+	 * @return
+	 */
+	public String getDate(int type, String formatStr) {
 		Date date = new Date();
 		SimpleDateFormat sdf = null;
-		if(null!=formatStr){
-		   sdf=new SimpleDateFormat(formatStr);
-		}else if(type==0){
-			sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		}else if(type==1){
-			sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-		}else if(type==2){
-			sdf=new SimpleDateFormat("yyyyMMdd");
+		if (null != formatStr) {
+			sdf = new SimpleDateFormat(formatStr);
+		} else if (type == 0) {
+			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		} else if (type == 1) {
+			sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		} else if (type == 2) {
+			sdf = new SimpleDateFormat("yyyyMMdd");
 		}
-		String str=sdf.format(date);
+		String str = sdf.format(date);
 		return str;
 	}
 
@@ -278,8 +310,11 @@ public class MethodUtil {
 	 * <b>功能：</b>时间差<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
-	 * @param current_time  当前时间
-	 * @param compare_time  比较时间
+	 * 
+	 * @param current_time
+	 *            当前时间
+	 * @param compare_time
+	 *            比较时间
 	 * @return 60秒为一分钟
 	 */
 	public long getDateCompare(String current_time, String compare_time) {
@@ -288,23 +323,26 @@ public class MethodUtil {
 		try {
 			Date c_tiem = sf.parse(current_time);
 			Date com_time = sf.parse(compare_time);
-			long l = c_tiem.getTime() - com_time.getTime() > 0 ? c_tiem.getTime() - com_time.getTime() : com_time.getTime() - c_tiem.getTime();
+			long l = c_tiem.getTime() - com_time.getTime() > 0 ? c_tiem.getTime() - com_time.getTime()
+					: com_time.getTime() - c_tiem.getTime();
 			time = l / 1000; // 算出超时秒数
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return time;
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>功能：</b>处理时间的加减运算 60*60 为一个小时  60*60*24 为一天<br>
+	 * <b>功能：</b>处理时间的加减运算 60*60 为一个小时 60*60*24 为一天<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
 	 * @param startTime
 	 * @param endTime
-	 * @param type 0为加 1为减
+	 * @param type
+	 *            0为加 1为减
 	 * @return
 	 */
 	public long getDateAdd(String startTime, String endTime, int type) {
@@ -337,7 +375,9 @@ public class MethodUtil {
 	 * <b>功能：</b>一个月最大day<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
-	 * @param time 时间
+	 * 
+	 * @param time
+	 *            时间
 	 * @return obj[0]=maxMonth; obj[1]=time;
 	 */
 	public Object[] getMaxMonth(String time) {
@@ -362,96 +402,89 @@ public class MethodUtil {
 		return obj;
 	}
 
-	
 	/**
 	 * 
 	 * <br>
 	 * <b>功能：</b>20位可用于UUID,订单号<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
 	 * @return
 	 */
-	public String getUid(){
+	public String getUid() {
 		return new SimpleDateFormat("yyMMddHHmmss").format(new Date()) + getRandom(8);
 	}
-	
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>12位时间加上number位数<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-9 <br>
-     * @param number 
-     * @return
-     */
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>12位时间加上number位数<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-9 <br>
+	 * 
+	 * @param number
+	 * @return
+	 */
 	public Long getUid(int number) {
 		return Long.parseLong(new SimpleDateFormat("yyMMddHHmmss").format(new Date()) + getRandom(number));
 	}
-	
-	 // 进行加法运算
-	public double add(double d1, double d2){       
-	          BigDecimal b1 = new BigDecimal(d1);
-	          BigDecimal b2 = new BigDecimal(d2);
-	         return b1.add(b2).doubleValue();
-	      }
+
+	// 进行加法运算
+	public double add(double d1, double d2) {
+		BigDecimal b1 = new BigDecimal(d1);
+		BigDecimal b2 = new BigDecimal(d2);
+		return b1.add(b2).doubleValue();
+	}
+
 	// 进行减法运算
-	public  double sub(double d1, double d2) {        
-		          BigDecimal b1 = new BigDecimal(d1);
-		          BigDecimal b2 = new BigDecimal(d2);
-		         return b1.subtract(b2).doubleValue();
-		    }
-	
+	public double sub(double d1, double d2) {
+		BigDecimal b1 = new BigDecimal(d1);
+		BigDecimal b2 = new BigDecimal(d2);
+		return b1.subtract(b2).doubleValue();
+	}
+
 	// 进行乘法运算
-	 public  double mul(double d1, double d2){        
-	          BigDecimal b1 = new BigDecimal(d1);
-	          BigDecimal b2 = new BigDecimal(d2);
-	         return b1.multiply(b2).doubleValue();
-	      }
-	 
+	public double mul(double d1, double d2) {
+		BigDecimal b1 = new BigDecimal(d1);
+		BigDecimal b2 = new BigDecimal(d2);
+		return b1.multiply(b2).doubleValue();
+	}
+
 	// 进行除法运算
-	 public  double div(double d1, double d2,int len) {
-			          BigDecimal b1 = new BigDecimal(d1);
-			          BigDecimal b2 = new BigDecimal(d2);
-			         return b1.divide(b2,len,BigDecimal.ROUND_HALF_UP).doubleValue();
-			      }
-	 /**
-	  * 
-	 * @Title: round  
-	 * @Description: TODO 
-	 * @author Yin MingXing master@coiol.com  
-	 * @date 2014年11月26日
-	 * @param @param d
-	 * @param @param len
-	 * @param @return      
-	 * @return double     
-	 * @throws  
-	  */
-	 public  double round(double d, int len) {     // 进行四舍五入 //操作
-			          BigDecimal b1 = new BigDecimal(d);
-			          BigDecimal b2 = new BigDecimal(1);
-			         // 任何一个数字除以1都是原数字
-			         // ROUND_HALF_UP是BigDecimal的一个常量，
-			         //表示进行四舍五入的操作
-			         return b1.divide(b2, len,BigDecimal.ROUND_HALF_UP).doubleValue();
-			      }
-	 
+	public double div(double d1, double d2, int len) {
+		BigDecimal b1 = new BigDecimal(d1);
+		BigDecimal b2 = new BigDecimal(d2);
+		return b1.divide(b2, len, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+
+	public double round(double d, int len) { // 进行四舍五入 //操作
+		BigDecimal b1 = new BigDecimal(d);
+		BigDecimal b2 = new BigDecimal(1);
+		// 任何一个数字除以1都是原数字
+		// ROUND_HALF_UP是BigDecimal的一个常量，
+		// 表示进行四舍五入的操作
+		return b1.divide(b2, len, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+
 	public static void main(String[] args) {
-		MethodUtil util=new MethodUtil();
-		for(int i=0;i<10;i++){
-		  System.out.println(util.getUid());
+		MethodUtil util = new MethodUtil();
+		for (int i = 0; i < 10; i++) {
+			System.out.println(util.getUid());
 		}
 	}
 
-	 /**
-     * 
-     * <br>
-     * <b>功能：</b>输出JSON<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-24 <br>
-     * @param response
-     * @param type 0=成功 其他=失败
-     * @param msg
-     */
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>输出JSON<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-24 <br>
+	 * 
+	 * @param response
+	 * @param type
+	 *            0=成功 其他=失败
+	 * @param msg
+	 */
 	public void toJsonMsg(HttpServletResponse response, int type, String msg) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
@@ -475,34 +508,37 @@ public class MethodUtil {
 			this.toJsonPrint(response, mapper.writeValueAsString(map));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			
+
 		}
 	}
-	
+
 	/**
 	 * 
 	 * <br>
 	 * <b>功能：</b>打印JSON<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-25 <br>
+	 * 
 	 * @param response
 	 * @param str
 	 */
-	public void toJsonPrint(HttpServletResponse response, String str){
-		//不需要设置  避免IE9 出现下载
-		//response.setContentType("application/json");text/html;charset=UTF-8
-		//response.setContentType("application/json");
+	public void toJsonPrint(HttpServletResponse response, String str) {
+		// 不需要设置 避免IE9 出现下载
+		// response.setContentType("application/json");text/html;charset=UTF-8
+		// response.setContentType("application/json");
 		this.writer(response, str);
 	}
-    /**
-     * 
-     * <br>
-     * <b>功能：</b>打印<br>
-     * <b>作者：</b>肖财高<br>
-     * <b>日期：</b> 2013-4-24 <br>
-     * @param response
-     * @param str
-     */
+
+	/**
+	 * 
+	 * <br>
+	 * <b>功能：</b>打印<br>
+	 * <b>作者：</b>肖财高<br>
+	 * <b>日期：</b> 2013-4-24 <br>
+	 * 
+	 * @param response
+	 * @param str
+	 */
 	public void writer(HttpServletResponse response, String str) {
 		try {
 			// 设置页面不缓存
@@ -511,7 +547,7 @@ public class MethodUtil {
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = null;
 			out = response.getWriter();
-			System.out.println("print:"+str);
+			System.out.println("print:" + str);
 			out.print(str);
 			out.flush();
 			out.close();
@@ -519,21 +555,23 @@ public class MethodUtil {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * 
 	 * <br>
 	 * <b>功能：</b>输出脚本<br>
 	 * <b>作者：</b>肖财高<br>
 	 * <b>日期：</b> 2013-4-25 <br>
+	 * 
 	 * @param response
 	 * @param str
 	 */
-	public void toSript(HttpServletResponse response,String str){
-		 StringBuffer sb=new StringBuffer();
-		 sb.append("<script type=\"text/javascript\">");
-		 sb.append(str);
-		 sb.append("</script>");
-		 response.setContentType("text/html");
-		 this.writer(response, sb.toString());
+	public void toSript(HttpServletResponse response, String str) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<script type=\"text/javascript\">");
+		sb.append(str);
+		sb.append("</script>");
+		response.setContentType("text/html");
+		this.writer(response, sb.toString());
 	}
 }
