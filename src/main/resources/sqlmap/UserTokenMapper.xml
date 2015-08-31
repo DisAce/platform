@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.coiol.platform.dao.UserTokenMapper" >
+  <resultMap id="BaseResultMap" type="org.coiol.platform.core.model.UserToken" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="TOKEN" property="token" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="CREATETIME" property="createTime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.userId != null" >
+        <![CDATA[ and ID <> #{condition.id} ]]>
+      </if>
+      <if test="condition.account != null" >
+         and ACCOUNT = #{condition.account}
+      </if>
+      <if test="condition.token != null" >
+         and TOKEN = #{condition.token}
+      </if>
+      <if test="condition.status != null" >
+         and STATUS = #{condition.status}
+      </if>
+      <if test="condition.createTime != null" >
+         and CREATETIME = #{condition.createTime}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ACCOUNT, TOKEN, STATUS, CREATETIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.coiol.platform.core.model.Criteria" >
+  <!-- 
+  Oracle use ; Mysql delete 
+    <include refid="common.Oracle_Pagination_Head" />
+    -->
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from base_user_token
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <!--  
+    Oracle use ; Mysql delete
+    <include refid="common.Oracle_Pagination_Tail" />
+    -->
+     <include refid="common.Mysql_Pagination" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from base_user_token
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_user_token
+    where ID = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.coiol.platform.core.model.Criteria" >
+    delete from base_user_token
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.coiol.platform.core.model.UserToken" >
+ 
+    insert into base_user_token (ID, ACCOUNT, TOKEN, STATUS, CREATETIME)
+    values (#{id}, #{account}, #{token}, #{status}, #{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="org.coiol.platform.core.model.UserToken" >
+    
+    insert into base_user_token
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,
+      <if test="account != null" >
+        ACCOUNT,
+      </if>
+      <if test="token != null" >
+        TOKEN,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+       <if test="createTime != null" >
+        CREATETIME
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="account != null" >
+        #{account},
+      </if>
+      <if test="token != null" >
+        #{token},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+       <if test="createTime != null" >
+        #{createTime}
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.coiol.platform.core.model.Criteria" resultType="java.lang.Integer" >
+    select count(*) from base_user_token
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update base_user_token
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id},
+      </if>
+      <if test="record.account != null" >
+        ACCOUNT = #{record.account},
+      </if>
+      <if test="record.token != null" >
+        TOKEN = #{record.token},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status},
+      </if>
+       <if test="record.createTime != null" >
+        CREATETIME = #{record.createTime}
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update base_user_token
+    set ID = #{record.id},
+      ACCOUNT = #{record.account},
+      TOKEN = #{record.token},
+      STATUS = #{record.status},
+      CREATETIME = #{record.createTime}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.coiol.platform.core.model.UserToken" >
+    update base_user_token
+    <set >
+      <if test="account != null" >
+        ACCOUNT = #{account},
+      </if>
+      <if test="token != null" >
+        TOKEN = #{token},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status},
+      </if>
+       <if test="createTime != null" >
+        CREATETIME = #{createTime}
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.coiol.platform.core.model.UserToken" >
+    update base_user_token
+    set 
+      ACCOUNT = #{record.account},
+      TOKEN = #{record.token},
+      STATUS = #{record.status},
+      CREATETIME = #{record.createTime}
+    where ID = #{id}
+  </update>
+</mapper>
