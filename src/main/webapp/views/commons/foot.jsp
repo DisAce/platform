@@ -32,7 +32,7 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript" src="${sysPath}static/assets/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${sysPath}static/assets/js/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="${sysPath}static/assets/js/jquery.gritter.min.js"></script>
+<script type="text/javascript" src="${cdnPath}static/assets/js/layer/layer.js"></script>
 <script type="text/javascript" src="${sysPath}static/assets/js/jqGrid/jquery.jqGrid.src.js"></script>
 <script type="text/javascript" src="${sysPath}static/assets/js/jqGrid/i18n/grid.locale-cn.js"></script>
 <script type="text/javascript" src="${sysPath}static/assets/js/Validform.js"></script>

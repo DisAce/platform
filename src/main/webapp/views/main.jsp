@@ -28,7 +28,6 @@ String userName = (String)request.getSession().getAttribute("userName");
 <![endif]-->
 <link rel="stylesheet" type="text/css" href="${cdnPath}static/assets/css/ace-skins.min.css" />
 <link rel="stylesheet" type="text/css" href="${cdnPath}static/assets/css/ace-rtl.min.css" />
-<link rel="stylesheet" type="text/css" href="${sysPath}static/assets/css/jquery.gritter.css" />
 <!--[if lte IE 9]>
 		  <link rel="stylesheet" href="${cdnPath}static/assets/css/ace-ie.min.css" />
 <![endif]-->
@@ -464,7 +463,7 @@ String userName = (String)request.getSession().getAttribute("userName");
 		<script type="text/javascript" src="${cdnPath}static/assets/js/flot/jquery.flot.pie.min.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/flot/jquery.flot.resize.min.js"></script>
 		<script type="text/javascript" src="${sysPath}static/assets/js/jquery.gritter.min.js"></script>
-		<script type="text/javascript" src="${cdnPath}static/js/FrameTab.js"></script>
+		<script type="text/javascript" src="${cdnPath}static/assets/js/FrameTab.js"></script>
 		<!-- common-->
 		<script type="text/javascript" src="${cdnPath}static/assets/js/layer/layer.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/js/util.js"></script>

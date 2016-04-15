@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.coiol.platform.common.utils.MethodUtil;
 import org.coiol.platform.common.utils.PropertiesHolder;
@@ -34,7 +35,6 @@ public class MainTest
 		MethodUtil md = new MethodUtil();
 		System.out.println("================="+md.getDES("c5a704f01300a735",1));
 		System.out.println(DigestUtils.md5Hex(str));
-		
 		 String password = DigestUtils.md5Hex("admin");
 		 System.out.println(DigestUtils.md5Hex(password + "{admin}"));
 		System.out.println(DigestUtils.sha256Hex(str));

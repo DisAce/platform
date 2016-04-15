@@ -219,6 +219,7 @@ var Share = {
 		    },
 		    /** 新增:获取汉字编码的hashCode */
 		   hashCode : function (str) {
+			   if(str != null && typeof(str) != "undefined"){
 		        var h = 0;
 		        var len = str.length;
 		        var t = 2147483648;
@@ -228,6 +229,7 @@ var Share = {
 		        }
 		        return h;
 		    }
+		   }
 		    
 };
 

@@ -1,6 +1,5 @@
 package org.coiol.platform.common.mybatis;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.ibatis.mapping.BoundSql;
@@ -14,17 +13,12 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.session.RowBounds;
 import org.coiol.platform.common.mybatis.dialect.Dialect;
 import org.coiol.platform.common.utils.PropertiesHelper;
-import org.coiol.platform.core.authority.interceptor.DataAuthorityValue;
-import org.coiol.platform.core.jackjson.JackJson;
-import org.coiol.platform.core.log.PlatFormLogger;
-import org.coiol.platform.core.log.PlatFormLoggerFactory;
 
 @Intercepts({
 		@org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "query", args = {
 				MappedStatement.class, Object.class, RowBounds.class,
 				org.apache.ibatis.session.ResultHandler.class }) })
 public class OffsetLimitInterceptor implements Interceptor {
-	private static final PlatFormLogger log = PlatFormLoggerFactory.getPlatFormLogger(OffsetLimitInterceptor.class);
 
 	static int MAPPED_STATEMENT_INDEX = 0;
 	static int PARAMETER_INDEX = 1;
@@ -33,14 +27,6 @@ public class OffsetLimitInterceptor implements Interceptor {
 	Dialect dialect;
 
 	public Object intercept(Invocation invocation) throws Throwable {
-		String dataSource = DataAuthorityValue.getAuthorityDataSource();
-		String authorityItems = DataAuthorityValue.getAuthorityitems();
-		HashMap<?, ?> dataAuthority = DataAuthorityValue.getDataAuthority();
-		HashMap<?, ?> authoritySql = DataAuthorityValue.getAuthoritySql();
-
-		log.debug("---------数据源:{}-------权限控制字段:{}-------Sql转换配置:{}-------用户权限：{}",
-				new Object[] { dataSource, authorityItems, JackJson.fromObjectToJson(authoritySql).toString(),
-						JackJson.fromObjectToJson(dataAuthority).toString() });
 		processIntercept(invocation.getArgs());
 		return invocation.proceed();
 	}

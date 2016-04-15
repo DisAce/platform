@@ -85,6 +85,9 @@ public class UserTokenServiceImpl implements UserTokenService {
 		return null;
 	}
 
+	/**
+	 * add token
+	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public String saveUserToken(Criteria paramCriteria) {

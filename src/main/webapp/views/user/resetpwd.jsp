@@ -162,7 +162,6 @@
 			if('ontouchstart' in document.documentElement) document.write("<script src='${cdnPath}static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/layer/layer.js"></script>
-		<script type="text/javascript" src="${cdnPath}static/assets/js/jquery.gritter.min.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/util.js"></script>
 		<script type="text/javascript" src="${cdnPath}static/assets/js/reset.js"></script>
 		<!-- inline scripts related to this page -->

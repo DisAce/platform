@@ -41,7 +41,6 @@ response.setDateHeader("Expires", 0);
 <![endif]-->
 <link rel="stylesheet" type="text/css" href="${sysPath}static/assets/css/ace-skins.min.css" />
 <link rel="stylesheet" type="text/css" href="${sysPath}static/assets/css/ace-rtl.min.css" />
-<link rel="stylesheet" type="text/css" href="${sysPath}static/assets/css/jquery.gritter.css" />
 <!--[if lte IE 9]>
 		  <link rel="stylesheet" href="${sysPath}static/assets/css/ace-ie.min.css" />
 <![endif]-->

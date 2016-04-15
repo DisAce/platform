@@ -412,7 +412,7 @@ public class MethodUtil {
 	 * @return
 	 */
 	public String getUid() {
-		return new SimpleDateFormat("yyMMddHHmmss").format(new Date()) + getRandom(8);
+		return new SimpleDateFormat("yyMMddHHmmssS").format(new Date()) + getRandom(8);
 	}
 
 	/**
